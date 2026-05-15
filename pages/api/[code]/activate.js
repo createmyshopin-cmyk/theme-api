@@ -8,7 +8,7 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end()
 
   const license_code = req.query.code
-  const { phone, shop_domain } = req.body || {}
+  const { phone, shop_domain, theme_name } = req.body || {}
 
   if (!phone || !license_code || !shop_domain) {
     return res.status(400).json({ error: 'phone, license_code and shop_domain are required' })
@@ -37,8 +37,8 @@ export default async function handler(req, res) {
   const ip = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || null
 
   await query(
-    'UPDATE licenses SET is_active = 1, shop_domain = ?, activated_at = NOW() WHERE id = ?',
-    [shop_domain, license.id]
+    'UPDATE licenses SET is_active = 1, shop_domain = ?, activated_at = NOW(), notes = ? WHERE id = ?',
+    [shop_domain, theme_name || license.notes, license.id]
   )
 
   await query(
