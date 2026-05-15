@@ -8,6 +8,7 @@ export default function AdminLogin() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [showPass, setShowPass] = useState(false)
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -63,13 +64,28 @@ export default function AdminLogin() {
             </div>
             <div style={styles.field}>
               <label style={styles.label}>Password</label>
-              <input
-                style={styles.input}
-                type="password"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                required
-              />
+              <div style={styles.passWrap}>
+                <input
+                  style={styles.passInput}
+                  type={showPass ? 'text' : 'password'}
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  required
+                />
+                <button type="button" style={styles.eyeBtn} onClick={() => setShowPass(v => !v)} tabIndex={-1}>
+                  {showPass ? (
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/>
+                      <line x1="1" y1="1" x2="23" y2="23"/>
+                    </svg>
+                  ) : (
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                      <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                  )}
+                </button>
+              </div>
             </div>
             {error && <p style={styles.error}>{error}</p>}
             <button style={{ ...styles.btn, opacity: loading ? 0.7 : 1 }} type="submit" disabled={loading}>
@@ -148,6 +164,32 @@ const styles = {
     boxSizing: 'border-box',
     color: '#0f172a',
     transition: 'border-color 0.2s',
+  },
+  passWrap: {
+    position: 'relative',
+    display: 'flex',
+    alignItems: 'center',
+  },
+  passInput: {
+    width: '100%',
+    padding: '11px 44px 11px 14px',
+    border: '1.5px solid #e2e8f0',
+    borderRadius: 10,
+    fontSize: 14,
+    outline: 'none',
+    boxSizing: 'border-box',
+    color: '#0f172a',
+  },
+  eyeBtn: {
+    position: 'absolute',
+    right: 12,
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    padding: 0,
+    display: 'flex',
+    alignItems: 'center',
+    lineHeight: 1,
   },
   error: {
     color: '#ef4444',
