@@ -36,13 +36,18 @@ export default function AdminLogin() {
   return (
     <>
       <Head>
-        <title>Triara Admin — Login</title>
+        <title>ThemePro — Login</title>
       </Head>
       <div style={styles.page}>
         <div style={styles.card}>
           <div style={styles.logo}>
-            <span style={styles.logoIcon}>🔐</span>
-            <h1 style={styles.title}>Triara License Admin</h1>
+            <div style={styles.logoMark}>
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
+            <h1 style={styles.title}>ThemePro</h1>
+            <p style={styles.subtitle}>License Management Panel</p>
           </div>
           <form onSubmit={handleSubmit}>
             <div style={styles.field}>
@@ -68,9 +73,10 @@ export default function AdminLogin() {
             </div>
             {error && <p style={styles.error}>{error}</p>}
             <button style={{ ...styles.btn, opacity: loading ? 0.7 : 1 }} type="submit" disabled={loading}>
-              {loading ? 'Signing in…' : 'Sign In'}
+              {loading ? 'Signing in…' : 'Sign In →'}
             </button>
           </form>
+          <p style={styles.footer}>createmyshop.in © {new Date().getFullYear()}</p>
         </div>
       </div>
     </>
@@ -80,7 +86,7 @@ export default function AdminLogin() {
 const styles = {
   page: {
     minHeight: '100vh',
-    background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
+    background: 'linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -88,47 +94,59 @@ const styles = {
   },
   card: {
     background: '#fff',
-    borderRadius: 16,
-    padding: '40px 36px',
+    borderRadius: 20,
+    padding: '44px 40px 32px',
     width: '100%',
     maxWidth: 400,
-    boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
+    boxShadow: '0 24px 64px rgba(0,0,0,0.35)',
   },
   logo: {
     textAlign: 'center',
-    marginBottom: 32,
+    marginBottom: 36,
   },
-  logoIcon: {
-    fontSize: 40,
-    display: 'block',
-    marginBottom: 8,
+  logoMark: {
+    width: 56,
+    height: 56,
+    background: 'linear-gradient(135deg, #6366f1, #4f46e5)',
+    borderRadius: 16,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: '0 auto 14px',
+    boxShadow: '0 8px 24px rgba(99,102,241,0.4)',
   },
   title: {
-    margin: 0,
-    fontSize: 22,
-    fontWeight: 700,
+    margin: '0 0 4px',
+    fontSize: 24,
+    fontWeight: 800,
     color: '#0f172a',
+    letterSpacing: '-0.5px',
   },
-  field: {
-    marginBottom: 18,
+  subtitle: {
+    margin: 0,
+    fontSize: 13,
+    color: '#64748b',
+    fontWeight: 500,
   },
+  field: { marginBottom: 18 },
   label: {
     display: 'block',
-    fontSize: 13,
-    fontWeight: 600,
+    fontSize: 11,
+    fontWeight: 700,
     color: '#475569',
     marginBottom: 6,
     textTransform: 'uppercase',
-    letterSpacing: '0.05em',
+    letterSpacing: '0.06em',
   },
   input: {
     width: '100%',
-    padding: '10px 14px',
+    padding: '11px 14px',
     border: '1.5px solid #e2e8f0',
-    borderRadius: 8,
-    fontSize: 15,
+    borderRadius: 10,
+    fontSize: 14,
     outline: 'none',
     boxSizing: 'border-box',
+    color: '#0f172a',
     transition: 'border-color 0.2s',
   },
   error: {
@@ -136,20 +154,28 @@ const styles = {
     fontSize: 13,
     margin: '0 0 14px',
     background: '#fef2f2',
-    padding: '8px 12px',
-    borderRadius: 6,
+    padding: '9px 12px',
+    borderRadius: 8,
     border: '1px solid #fecaca',
   },
   btn: {
     width: '100%',
-    padding: '12px',
+    padding: '13px',
     background: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)',
     color: '#fff',
     border: 'none',
-    borderRadius: 8,
+    borderRadius: 10,
     fontSize: 15,
-    fontWeight: 600,
+    fontWeight: 700,
     cursor: 'pointer',
     marginTop: 4,
+    letterSpacing: '0.02em',
+  },
+  footer: {
+    textAlign: 'center',
+    fontSize: 12,
+    color: '#94a3b8',
+    marginTop: 28,
+    marginBottom: 0,
   },
 }
