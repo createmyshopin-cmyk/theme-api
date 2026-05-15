@@ -13,8 +13,11 @@ export default async function handler(req, res) {
   }
 
   if (req.method === 'DELETE') {
-    const { id } = req.query
+    const { id, pin } = req.query
     if (!id) return res.status(400).json({ error: 'id required' })
+    if (!pin || pin !== process.env.ADMIN_PIN) {
+      return res.status(403).json({ error: 'Invalid PIN' })
+    }
     await query('DELETE FROM licenses WHERE id = ?', [id])
     return res.json({ success: true })
   }

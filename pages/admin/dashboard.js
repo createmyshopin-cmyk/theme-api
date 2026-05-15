@@ -23,6 +23,10 @@ export default function Dashboard() {
   const [toast, setToast]           = useState(null)
   const [activeNav, setActiveNav]   = useState('licenses')
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [pinModal, setPinModal] = useState(null) // { action: 'revoke'|'delete', id, phone }
+  const [pinValue, setPinValue] = useState('')
+  const [pinError, setPinError] = useState('')
+  const [pinLoading, setPinLoading] = useState(false)
 
   useEffect(() => {
     const t = localStorage.getItem('triara_admin_token')
@@ -85,26 +89,38 @@ export default function Dashboard() {
     finally { setGenLoading(false) }
   }
 
-  async function handleRevoke(id, phone) {
-    if (!confirm(`Revoke license for ${phone}?`)) return
-    try {
-      const res = await fetch('/api/admin/revoke', {
-        method: 'POST', headers: authHeaders(), body: JSON.stringify({ id }),
-      })
-      if (!res.ok) throw new Error()
-      showToast('License revoked'); fetchLicenses()
-    } catch { showToast('Failed to revoke', 'error') }
+  function handleRevoke(id, phone) {
+    setPinValue(''); setPinError('')
+    setPinModal({ action: 'revoke', id, phone })
   }
 
-  async function handleDelete(id, phone) {
-    if (!confirm(`Permanently delete license for ${phone}?`)) return
+  function handleDelete(id, phone) {
+    setPinValue(''); setPinError('')
+    setPinModal({ action: 'delete', id, phone })
+  }
+
+  async function confirmPin() {
+    if (pinValue.length !== 4) { setPinError('Enter 4-digit PIN'); return }
+    setPinLoading(true); setPinError('')
     try {
-      const res = await fetch(`/api/admin/licenses?id=${id}`, {
-        method: 'DELETE', headers: authHeaders(),
-      })
+      let res
+      if (pinModal.action === 'revoke') {
+        res = await fetch('/api/admin/revoke', {
+          method: 'POST', headers: authHeaders(),
+          body: JSON.stringify({ id: pinModal.id, pin: pinValue }),
+        })
+      } else {
+        res = await fetch(`/api/admin/licenses?id=${pinModal.id}&pin=${pinValue}`, {
+          method: 'DELETE', headers: authHeaders(),
+        })
+      }
+      if (res.status === 403) { setPinError('Incorrect PIN. Try again.'); return }
       if (!res.ok) throw new Error()
-      showToast('License deleted'); fetchLicenses()
-    } catch { showToast('Failed to delete', 'error') }
+      showToast(pinModal.action === 'revoke' ? 'License revoked' : 'License deleted')
+      setPinModal(null)
+      fetchLicenses()
+    } catch { setPinError('Something went wrong.') }
+    finally { setPinLoading(false) }
   }
 
   function copyCode(code) {
@@ -443,6 +459,69 @@ export default function Dashboard() {
         </div>
       </div>
 
+      {/* PIN Modal */}
+      {pinModal && (
+        <div style={s.pinOverlay}>
+          <div style={s.pinModal}>
+            <div style={s.pinIcon}>
+              {pinModal.action === 'revoke' ? '🔄' : '🗑️'}
+            </div>
+            <h3 style={s.pinTitle}>
+              {pinModal.action === 'revoke' ? 'Revoke License' : 'Delete License'}
+            </h3>
+            <p style={s.pinSub}>
+              {pinModal.action === 'revoke'
+                ? `Revoke access for ${pinModal.phone}?`
+                : `Permanently delete ${pinModal.phone}?`}
+            </p>
+            <p style={s.pinHint}>Enter your 4-digit admin PIN to confirm</p>
+            <div style={s.pinBoxes}>
+              {[0,1,2,3].map(i => (
+                <input
+                  key={i}
+                  id={`pin-box-${i}`}
+                  type="password"
+                  inputMode="numeric"
+                  maxLength={1}
+                  style={{ ...s.pinBox, ...(pinError ? s.pinBoxError : {}) }}
+                  value={pinValue[i] || ''}
+                  onChange={e => {
+                    const val = e.target.value.replace(/\D/g,'')
+                    const arr = pinValue.split('')
+                    arr[i] = val
+                    const next = arr.join('').slice(0,4)
+                    setPinValue(next)
+                    setPinError('')
+                    if (val && i < 3) document.getElementById(`pin-box-${i+1}`)?.focus()
+                  }}
+                  onKeyDown={e => {
+                    if (e.key === 'Backspace' && !pinValue[i] && i > 0) {
+                      document.getElementById(`pin-box-${i-1}`)?.focus()
+                      const arr = pinValue.split('')
+                      arr[i-1] = ''
+                      setPinValue(arr.join(''))
+                    }
+                    if (e.key === 'Enter') confirmPin()
+                  }}
+                  autoFocus={i === 0}
+                />
+              ))}
+            </div>
+            {pinError && <p style={s.pinErrMsg}>{pinError}</p>}
+            <div style={s.pinActions}>
+              <button style={s.pinCancel} onClick={() => setPinModal(null)}>Cancel</button>
+              <button
+                style={{ ...s.pinConfirm, ...(pinModal.action === 'delete' ? s.pinConfirmDelete : s.pinConfirmRevoke), opacity: pinLoading ? 0.7 : 1 }}
+                onClick={confirmPin}
+                disabled={pinLoading}
+              >
+                {pinLoading ? 'Verifying…' : `Confirm ${pinModal.action === 'revoke' ? 'Revoke' : 'Delete'}`}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Toast */}
       {toast && (
         <div style={{ ...s.toast, background: toast.type === 'error' ? '#ef4444' : '#16a34a' }}>
@@ -454,6 +533,7 @@ export default function Dashboard() {
         * { box-sizing: border-box; }
         body { margin: 0; }
         @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes pop { from { transform: scale(0.85); opacity:0; } to { transform: scale(1); opacity:1; } }
         @media (min-width: 769px) {
           #cms-sidebar { transform: translateX(0) !important; }
           #cms-main    { margin-left: 240px !important; }
@@ -734,6 +814,53 @@ const s = {
     border:'1px solid #fecaca', color:'#dc2626',
     borderRadius:7, cursor:'pointer', fontSize:11, fontWeight:700, whiteSpace:'nowrap',
   },
+
+  // PIN Modal
+  pinOverlay: {
+    position:'fixed', inset:0,
+    background:'rgba(15,23,42,0.75)',
+    backdropFilter:'blur(6px)',
+    display:'flex', alignItems:'center', justifyContent:'center',
+    zIndex:200,
+  },
+  pinModal: {
+    background:'#fff', borderRadius:20,
+    padding:'36px 32px 28px',
+    width:'100%', maxWidth:360,
+    margin:16,
+    boxShadow:'0 32px 80px rgba(0,0,0,0.35)',
+    textAlign:'center',
+    animation:'pop 0.25s ease',
+  },
+  pinIcon: { fontSize:40, marginBottom:12 },
+  pinTitle: { margin:'0 0 6px', fontSize:20, fontWeight:800, color:'#0f172a' },
+  pinSub:   { margin:'0 0 4px', fontSize:13, color:'#64748b' },
+  pinHint:  { margin:'0 0 20px', fontSize:12, color:'#94a3b8' },
+  pinBoxes: { display:'flex', gap:10, justifyContent:'center', marginBottom:16 },
+  pinBox: {
+    width:52, height:60,
+    border:'2px solid #e2e8f0', borderRadius:12,
+    textAlign:'center', fontSize:24, fontWeight:800,
+    color:'#0f172a', outline:'none',
+    background:'#f8fafc',
+    transition:'border-color 0.15s',
+  },
+  pinBoxError: { borderColor:'#ef4444', background:'#fef2f2' },
+  pinErrMsg: { color:'#ef4444', fontSize:13, margin:'0 0 12px', fontWeight:600 },
+  pinActions: { display:'flex', gap:10, marginTop:4 },
+  pinCancel: {
+    flex:1, padding:'11px',
+    background:'#f1f5f9', border:'none',
+    borderRadius:10, fontSize:14, fontWeight:600,
+    cursor:'pointer', color:'#475569',
+  },
+  pinConfirm: {
+    flex:2, padding:'11px',
+    border:'none', borderRadius:10,
+    fontSize:14, fontWeight:700, cursor:'pointer', color:'#fff',
+  },
+  pinConfirmRevoke: { background:'linear-gradient(135deg,#f59e0b,#d97706)' },
+  pinConfirmDelete: { background:'linear-gradient(135deg,#ef4444,#dc2626)' },
 
   // Toast
   toast: {
