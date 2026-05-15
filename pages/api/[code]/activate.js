@@ -37,8 +37,8 @@ export default async function handler(req, res) {
   const ip = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || null
 
   await query(
-    'UPDATE licenses SET is_active = 1, shop_domain = ?, activated_at = NOW(), notes = ? WHERE id = ?',
-    [shop_domain, theme_name || license.notes, license.id]
+    'UPDATE licenses SET is_active = 1, shop_domain = ?, activated_at = NOW(), theme_name = ? WHERE id = ?',
+    [shop_domain, theme_name || license.theme_name, license.id]
   )
 
   await query(

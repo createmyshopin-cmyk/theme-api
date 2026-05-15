@@ -158,7 +158,7 @@ export default function Dashboard() {
       l.phone?.includes(search) ||
       l.license_code?.includes(search) ||
       l.shop_domain?.includes(search) ||
-      l.notes?.toLowerCase().includes(search.toLowerCase())
+      l.theme_name?.toLowerCase().includes(search.toLowerCase())
     const matchStatus =
       statusFilter === 'all' ||
       (statusFilter === 'active' && l.is_active) ||
@@ -372,7 +372,7 @@ export default function Dashboard() {
                           </div>
                           <div style={s.mobileCardRow}>
                             <span style={s.codeChip} onClick={() => copyCode(lic.license_code)}>{lic.license_code}</span>
-                            {lic.notes && <span style={s.mobileNotes}>{lic.notes}</span>}
+                            {lic.theme_name && <span style={s.mobileNotes}>{lic.theme_name}</span>}
                           </div>
                           {lic.shop_domain && (
                             <div style={s.mobileDomain}>
@@ -401,7 +401,7 @@ export default function Dashboard() {
                       <table style={s.table}>
                         <thead>
                           <tr>
-                            {['Phone', 'Code', 'Theme / Notes', 'Shop Domain', 'Status', 'Created', 'Activated', 'Actions'].map(h => (
+                            {['Phone', 'Code', 'Theme Name', 'Shop Domain', 'Status', 'Created', 'Activated', 'Actions'].map(h => (
                               <th key={h} style={s.th}>{h}</th>
                             ))}
                           </tr>
@@ -416,7 +416,7 @@ export default function Dashboard() {
                                 </span>
                               </td>
                               <td style={{ ...s.td, maxWidth: 160 }}>
-                                <span style={s.notesText}>{lic.notes || <span style={s.muted}>—</span>}</span>
+                                <span style={s.notesText}>{lic.theme_name || <span style={s.muted}>—</span>}</span>
                               </td>
                               <td style={{ ...s.td, maxWidth: 180 }}>
                                 {lic.shop_domain
