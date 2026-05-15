@@ -14,11 +14,11 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'phone, license_code and shop_domain are required' })
   }
 
-  const normalized = phone.replace(/[^\d+]/g, '')
+  const digitsOnly = phone.replace(/\D/g, '')
 
   const rows = await query(
-    'SELECT * FROM licenses WHERE phone = ? AND license_code = ?',
-    [normalized, license_code]
+    'SELECT * FROM licenses WHERE REPLACE(REPLACE(phone, "+", ""), " ", "") LIKE ? AND license_code = ?',
+    ['%' + digitsOnly, license_code]
   )
 
   if (rows.length === 0) {
