@@ -24,5 +24,5 @@ export default async function handler(req, res) {
   const license = rows[0]
   const valid = license.is_active === 1 && license.shop_domain === shop_domain
 
-  return res.json({ valid })
+  return res.json({ valid, is_active: license.is_active })
 }
