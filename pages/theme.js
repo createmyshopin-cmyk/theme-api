@@ -1,6 +1,5 @@
 import Head from 'next/head';
 import { useState, useEffect, useRef } from 'react';
-import '../styles/theme.css';
 
 /* ─────────────────── Utility ─────────────────── */
 function shade(hex, amt) {
@@ -160,6 +159,120 @@ function Hero() {
   );
 }
 
+/* ─────────────────── Anniversary Offer Section ─────────────────── */
+const ANNIV_MSGS = [
+  '🎂 3rd Anniversary Sale — ₹599 only!',
+  '🔥 Flash Sale — Only a few spots left!',
+  '⚡ 247 people viewing this right now',
+  '🚨 Price goes up when timer hits zero!',
+  '💸 Save ₹31,401 today only!',
+  '⏳ Anniversary offer — grab it before it\'s gone',
+  '🏆 #1 Rated Shopify theme in India',
+  '🎯 Offer valid for today only!',
+];
+
+function AnniversaryOffer() {
+  const [msgIdx,  setMsgIdx]  = useState(0);
+  const [anim,    setAnim]    = useState('ann-msg-in');
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setAnim('ann-msg-out');
+      setTimeout(() => {
+        setMsgIdx((i) => (i + 1) % ANNIV_MSGS.length);
+        setAnim('ann-msg-in');
+      }, 350);
+    }, 3000);
+    return () => clearInterval(id);
+  }, []);
+
+  const avatars = [
+    { emoji: '👨🏾', bg: ['#26a66a','#0e4d2d'] },
+    { emoji: '👩🏾', bg: ['#f6b733','#b07800'] },
+    { emoji: '👨🏿', bg: ['#7b5cff','#3a2358'] },
+    { emoji: '👩🏽', bg: ['#ff7ab8','#8b1a4a'] },
+    { emoji: '🧑🏾', bg: ['#2f80ed','#1c3a6e'] },
+  ];
+
+  return (
+    <section className="ann-section">
+      {['ann-dot1','ann-dot2','ann-dot3','ann-dot4'].map((c) => (
+        <span key={c} className={`ann-dot ${c}`} aria-hidden="true" />
+      ))}
+
+      <div className="wrap ann-wrap">
+        {/* LEFT — Headline + badge */}
+        <div className="ann-left">
+          <div className="ann-badge">🎂 3rd Anniversary Offer</div>
+          <h2 className="ann-headline">
+            Celebrate With Us —<br />
+            Get The Theme at<br />
+            <span className="ann-price-inline">₹599</span>
+          </h2>
+          {/* Social proof — desktop shows here */}
+          <div className="ann-proof ann-proof-desktop" style={{ display: 'none' }}>
+            <div className="ann-avatars">
+              {avatars.map((av, i) => (
+                <span key={i} className="ann-av" style={{ background: `linear-gradient(135deg,${av.bg[0]},${av.bg[1]})` }}>
+                  {av.emoji}
+                </span>
+              ))}
+            </div>
+            <span className="ann-proof-text">28,000+ stores already running this theme</span>
+          </div>
+        </div>
+
+        {/* RIGHT — Price card + strip + CTA */}
+        <div className="ann-right">
+          {/* Price card */}
+          <div className="ann-price-card">
+            <div className="ann-price-row">
+              <div className="ann-price-block">
+                <span className="ann-now">₹599</span>
+                <span className="ann-mrp">₹32,000</span>
+              </div>
+              <div className="ann-off-pill">98% OFF</div>
+            </div>
+            <div className="ann-saved-badge">🎉 You save ₹31,401 today!</div>
+            <div className="ann-price-meta">
+              <span className="ann-price-tag">⏱ Limited time</span>
+              <span className="ann-price-tag">📅 Today only</span>
+              <span className="ann-price-tag">✅ No hidden charges</span>
+            </div>
+          </div>
+          <p className="ann-sub">One-time payment · Lifetime updates included</p>
+
+          {/* Rotating urgency strip */}
+          <div className="ann-strip">
+            <span className="ann-strip-dot" />
+            <span className={`ann-strip-text ${anim}`}>{ANNIV_MSGS[msgIdx]}</span>
+          </div>
+
+          {/* CTA */}
+          <div className="ann-cta-wrap">
+            <a href="#pricing" className="ann-cta">
+              🎂 Grab Anniversary Deal →
+            </a>
+            <p className="ann-guarantee">🔒 Secure checkout · 30-day money-back guarantee</p>
+          </div>
+
+          {/* Social proof — mobile shows here */}
+          <div className="ann-proof ann-proof-mobile">
+            <div className="ann-avatars">
+              {avatars.map((av, i) => (
+                <span key={i} className="ann-av" style={{ background: `linear-gradient(135deg,${av.bg[0]},${av.bg[1]})` }}>
+                  {av.emoji}
+                </span>
+              ))}
+            </div>
+            <span className="ann-proof-text">28,000+ stores already running this theme</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ─────────────────── Performance ─────────────────── */
 function Performance() {
   const [perf, setPerf] = useState(0);
@@ -204,11 +317,11 @@ function Performance() {
             <span><i className="legend-i amber" />50–89</span>
             <span><i className="legend-i green" />90–100</span>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 24 }}>
+          <div className="gauge-mini-row">
             {[['Accessibility', 100], ['Best Practices', 100], ['SEO', 100]].map(([label, val]) => (
               <div key={label}>
                 <div className="gauge-mini" style={{ '--p': val }}><div className="gauge-num-sm">{val}</div></div>
-                <div style={{ fontWeight: 700, fontSize: 18, textAlign: 'center' }}>{label}</div>
+                <div className="gauge-mini-label">{label}</div>
               </div>
             ))}
           </div>
@@ -218,11 +331,11 @@ function Performance() {
               <div className="gtm-lbl">GTmetrix Grade</div>
             </div>
             <div>
-              <div style={{ color: '#5b6270', fontSize: 15 }}>Performance</div>
+              <div className="gtm-lbl">Performance</div>
               <div className="gtm-pct">99%</div>
             </div>
             <div>
-              <div style={{ color: '#5b6270', fontSize: 15 }}>Structure</div>
+              <div className="gtm-lbl">Structure</div>
               <div className="gtm-pct">100%</div>
             </div>
           </div>
@@ -236,12 +349,9 @@ function Performance() {
         </p>
       </div>
 
-      <svg className="wave" viewBox="0 0 1440 220" preserveAspectRatio="none">
-        <path d="M0 160 C 180 60, 360 220, 540 140 C 720 60, 900 200, 1080 130 C 1260 70, 1440 160, 1440 160 L1440 220 L0 220 Z" fill="rgba(0,0,0,0.18)" />
-        <path d="M0 160 C 180 60, 360 220, 540 140 C 720 60, 900 200, 1080 130 C 1260 70, 1440 160, 1440 160" stroke="#5dd3a0" strokeWidth="3" fill="none" />
-        {[540, 720, 900, 1080].map((cx, i) => (
-          <circle key={i} cx={cx} cy={[140, 100, 200, 130][i]} r="6" fill="#fff" />
-        ))}
+      <svg className="wave" viewBox="0 0 1440 80" preserveAspectRatio="none">
+        <path d="M0 40 C 240 0, 480 80, 720 40 C 960 0, 1200 60, 1440 30 L1440 80 L0 80 Z" fill="rgba(0,0,0,0.15)" />
+        <path d="M0 40 C 240 0, 480 80, 720 40 C 960 0, 1200 60, 1440 30" stroke="rgba(255,255,255,0.25)" strokeWidth="2" fill="none" />
       </svg>
     </section>
   );
@@ -629,52 +739,176 @@ function Footer() {
   );
 }
 
-/* ─────────────────── Mobile Sticky Bar ─────────────────── */
-const TIMER_START = 9 * 60; // 9 minutes in seconds
+/* ─────────────────── Purchase Notifications ─────────────────── */
+const BUYERS = [
+  { name: 'Afsal',      city: 'Calicut' },
+  { name: 'Arjun',      city: 'Kochi' },
+  { name: 'Divya',      city: 'Bangalore' },
+  { name: 'Ramesh',     city: 'Chennai' },
+  { name: 'Priya',      city: 'Coimbatore' },
+  { name: 'Karthik',    city: 'Hyderabad' },
+  { name: 'Anjali',     city: 'Trivandrum' },
+  { name: 'Mohammed',   city: 'Malappuram' },
+  { name: 'Sneha',      city: 'Mysuru' },
+  { name: 'Vishnu',     city: 'Thrissur' },
+  { name: 'Lakshmi',    city: 'Madurai' },
+  { name: 'Rahul',      city: 'Mangalore' },
+  { name: 'Fathima',    city: 'Kozhikode' },
+  { name: 'Suresh',     city: 'Vijayawada' },
+  { name: 'Nithya',     city: 'Salem' },
+  { name: 'Arun',       city: 'Tirupur' },
+  { name: 'Meera',      city: 'Ernakulam' },
+  { name: 'Shafeeq',    city: 'Kannur' },
+  { name: 'Kavya',      city: 'Vizag' },
+  { name: 'Deepak',     city: 'Puducherry' },
+];
 
-function MobileStickyBar() {
-  const [seconds, setSeconds] = useState(TIMER_START);
-  const [dismissed, setDismissed] = useState(false);
+const TIMES = ['just now', '1 min ago', '2 mins ago', '3 mins ago', '5 mins ago', '7 mins ago', '9 mins ago', '12 mins ago'];
+
+const AVATAR_COLORS = [
+  ['#26a66a','#0e4d2d'], ['#2f80ed','#1c3a6e'], ['#7b5cff','#3a2358'],
+  ['#ff5b48','#5c1a12'], ['#f6b733','#5c3d00'], ['#ff7ab8','#5c1a3a'],
+];
+
+function PurchaseToast() {
+  const [visible,  setVisible]  = useState(false);
+  const [leaving,  setLeaving]  = useState(false);
+  const [buyer,    setBuyer]    = useState(null);
+  const [colors,   setColors]   = useState(AVATAR_COLORS[0]);
+  const [time,     setTime]     = useState(TIMES[0]);
+  const indexRef = useRef(-1);
 
   useEffect(() => {
-    if (dismissed) return;
+    const show = () => {
+      indexRef.current = (indexRef.current + 1) % BUYERS.length;
+      setBuyer(BUYERS[indexRef.current]);
+      setColors(AVATAR_COLORS[indexRef.current % AVATAR_COLORS.length]);
+      setTime(TIMES[Math.floor(Math.random() * TIMES.length)]);
+      setLeaving(false);
+      setVisible(true);
+      setTimeout(() => setLeaving(true),  3800);
+      setTimeout(() => setVisible(false), 4300);
+    };
+    const first    = setTimeout(show, 2500);
+    const interval = setInterval(show, 6500);
+    return () => { clearTimeout(first); clearInterval(interval); };
+  }, []);
+
+  if (!visible || !buyer) return null;
+
+  const initials = buyer.name.slice(0, 2).toUpperCase();
+
+  return (
+    <div className={`toast${leaving ? ' toast-leave' : ' toast-enter'}`}>
+      {/* Shimmer bar at top */}
+      <div className="toast-shimmer" />
+
+      <div className="toast-inner">
+        {/* Avatar */}
+        <div className="toast-avatar" style={{ background: `linear-gradient(135deg, ${colors[0]}, ${colors[1]})` }}>
+          {initials}
+          <span className="toast-online" />
+        </div>
+
+        {/* Content */}
+        <div className="toast-content">
+          <div className="toast-row1">
+            <span className="toast-name">{buyer.name}</span>
+            {/* Verified blue tick */}
+            <svg viewBox="0 0 22 22" width="15" height="15" fill="none">
+              <path d="M11 1L13.4 3.8L17 3.2L17.8 6.8L21 8.5L19.5 12L21 15.5L17.8 17.2L17 20.8L13.4 20.2L11 23L8.6 20.2L5 20.8L4.2 17.2L1 15.5L2.5 12L1 8.5L4.2 6.8L5 3.2L8.6 3.8Z" fill="#1d9bf0"/>
+              <path d="M7.5 12l2.5 2.5 4.5-5" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            <span className="toast-time">{time}</span>
+          </div>
+          <div className="toast-row2">
+            <span className="toast-city">📍 {buyer.city}</span>
+          </div>
+          <div className="toast-row3">
+            purchased <span className="toast-product">ThemePro v2</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─────────────────── Mobile Sticky Bar ─────────────────── */
+const TIMER_START = 9 * 60;
+
+const URGENCY_MSGS = [
+  { icon: '🎂', text: '3rd Anniversary Sale — ₹599 only!' },
+  { icon: '🔥', text: 'Flash Sale — Only a few spots left!' },
+  { icon: '⚡', text: '247 people viewing this right now' },
+  { icon: '🚨', text: 'Price goes up when timer hits zero!' },
+  { icon: '✅', text: '28,000+ stores already use this theme' },
+  { icon: '💸', text: 'Save ₹31,401 today only!' },
+  { icon: '⏳', text: 'Anniversary offer — grab it before it\'s gone' },
+  { icon: '🏆', text: '#1 Rated Shopify theme in India' },
+];
+
+function MobileStickyBar() {
+  const [seconds,  setSeconds]  = useState(TIMER_START);
+  const [msgIdx,   setMsgIdx]   = useState(0);
+  const [msgAnim,  setMsgAnim]  = useState('msb-msg-in');
+
+  useEffect(() => {
     const id = setInterval(() => {
-      setSeconds((s) => {
-        if (s <= 1) { clearInterval(id); return 0; }
-        return s - 1;
-      });
+      setSeconds((s) => (s <= 1 ? 0 : s - 1));
     }, 1000);
     return () => clearInterval(id);
-  }, [dismissed]);
+  }, []);
 
-  if (dismissed) return null;
+  // Rotate urgency message every 3s with fade animation
+  useEffect(() => {
+    const id = setInterval(() => {
+      setMsgAnim('msb-msg-out');
+      setTimeout(() => {
+        setMsgIdx((i) => (i + 1) % URGENCY_MSGS.length);
+        setMsgAnim('msb-msg-in');
+      }, 350);
+    }, 3000);
+    return () => clearInterval(id);
+  }, []);
 
-  const mm = String(Math.floor(seconds / 60)).padStart(2, '0');
-  const ss = String(seconds % 60).padStart(2, '0');
+  const mm  = String(Math.floor(seconds / 60)).padStart(2, '0');
+  const ss  = String(seconds % 60).padStart(2, '0');
   const expired = seconds === 0;
+  const msg = URGENCY_MSGS[msgIdx];
 
   return (
     <div className="msb">
-      <button className="msb-close" onClick={() => setDismissed(true)} aria-label="Close">×</button>
-
-      {/* Urgency row */}
-      <div className="msb-top">
-        <span className="msb-fire">🔥</span>
-        <span className="msb-urgent">Limited time offer — ends in</span>
-        <span className={`msb-timer${expired ? ' msb-timer-red' : ''}`}>
-          {expired ? 'EXPIRED' : `${mm}:${ss}`}
+      {/* Top urgency strip */}
+      <div className="msb-strip">
+        <span className="msb-strip-dot" />
+        <span className={`msb-strip-text ${msgAnim}`}>
+          {msg.icon} {msg.text}
+        </span>
+        <span className={`msb-clock${expired ? ' msb-clock-expired' : ''}`}>
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+          {expired ? 'Offer ended' : `Ends in ${mm}:${ss}`}
         </span>
       </div>
 
-      {/* Price + CTA row */}
-      <div className="msb-bottom">
-        <div className="msb-prices">
-          <span className="msb-mrp">₹32,000</span>
-          <span className="msb-now">₹2,499</span>
-          <span className="msb-off">92% OFF</span>
+      {/* Main row */}
+      <div className="msb-main">
+        {/* Price block */}
+        <div className="msb-price-block">
+          <div className="msb-anniv">
+            🎂 3rd Anniversary Offer
+          </div>
+          <div className="msb-price-row">
+            <span className="msb-now">₹599</span>
+            <span className="msb-mrp">₹32,000</span>
+            <span className="msb-badge">98% OFF</span>
+          </div>
+          <div className="msb-sublabel">Limited time · Today only</div>
         </div>
-        <a href="#pricing" className="msb-btn">
-          Buy Theme Now →
+
+        {/* CTA */}
+        <a href="#pricing" className="msb-cta">
+          <span>Buy Now</span>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
       </div>
     </div>
@@ -697,6 +931,7 @@ export default function ThemePage() {
       </Head>
       <Nav />
       <Hero />
+      <AnniversaryOffer />
       <Performance />
       <FeaturesGrid />
       <BoostTraffic />
@@ -707,6 +942,7 @@ export default function ThemePage() {
       <FAQ />
       <FinalCTA />
       <Footer />
+      <PurchaseToast />
       <MobileStickyBar />
     </>
   );
