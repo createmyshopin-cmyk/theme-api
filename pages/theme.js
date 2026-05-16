@@ -253,7 +253,7 @@ function AnniversaryOffer() {
             <a href="https://superprofile.bio/vp/shopify-415" target="_blank" rel="noopener noreferrer" className="ann-cta">
               🎂 Grab Anniversary Deal →
             </a>
-            <p className="ann-guarantee">🔒 Secure checkout · 30-day money-back guarantee</p>
+            <p className="ann-guarantee">🔒 Secure checkout</p>
           </div>
 
           {/* Social proof — mobile shows here */}
@@ -604,7 +604,7 @@ function Pricing() {
           ))}
         </div>
         <p style={{ textAlign: 'center', marginTop: 28, color: '#5b6270' }}>
-          🔒 Secure checkout · 30-day money-back guarantee · VAT included
+          🔒 Secure checkout · VAT included
         </p>
       </div>
     </section>
@@ -694,7 +694,7 @@ function FinalCTA() {
           <a href="#demos"   className="btn btn-ghost-light btn-lg">See live demos</a>
         </div>
         <p style={{ color: 'rgba(255,255,255,0.5)', marginTop: 22, fontSize: 13 }}>
-          30-day money-back guarantee · Secure checkout via Stripe
+          Secure checkout via Stripe
         </p>
       </div>
     </section>
