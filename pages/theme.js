@@ -24,7 +24,7 @@ function Nav() {
           <span className="hex-glyph sm">
             <svg viewBox="0 0 24 24" width="13" height="13"><path d="M12 4v16M4 12h16" stroke="#fff" strokeWidth="2.8" /></svg>
           </span>
-          VESTA
+          ThemePro V2
         </a>
         <div className="nav-links">
           <a href="#features">Features</a>
@@ -58,7 +58,7 @@ function ThemeTile({ palette, title, sub, flip }) {
   return (
     <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', background: '#fff' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 12px', fontSize: 9.5, color: '#5b6270' }}>
-        <span style={{ fontWeight: 800, letterSpacing: '-0.02em', color: '#0c0d10' }}>VESTA</span>
+        <span style={{ fontWeight: 800, letterSpacing: '-0.02em', color: '#0c0d10' }}>ThemePro V2</span>
         <span style={{ display: 'flex', gap: 10 }}><span>Shop</span><span>Page</span><span>Blog</span></span>
         <span style={{ display: 'flex', gap: 6 }}>
           <svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" /></svg>
@@ -423,7 +423,7 @@ function BoostTraffic() {
         <div className="section-head">
           <span className="eyebrow">Perfect for E-commerce</span>
           <h2 className="section-title">Boost The Traffic</h2>
-          <p className="lead">Vesta focuses on customer experience and behavior to provide the best features for enticing customers and boosting sales.</p>
+          <p className="lead">ThemePro V2 focuses on customer experience and behavior to provide the best features for enticing customers and boosting sales.</p>
         </div>
         <div className="boost-grid">
           {BOOST_ITEMS.map((it) => (
@@ -540,7 +540,7 @@ function Stats() {
     { num: '28k+',   lbl: 'stores already shipped' },
     { num: '99/100', lbl: 'PageSpeed performance' },
     { num: '4.95 ★', lbl: 'average review (2.4k)' },
-    { num: '$1.2M+', lbl: 'GMV powered by Vesta' },
+    { num: '$1.2M+', lbl: 'GMV powered by ThemePro V2' },
   ];
   return (
     <section className="section section-white" style={{ paddingTop: 0, paddingBottom: 30 }}>
@@ -624,7 +624,7 @@ function Testimonials() {
       <div className="wrap">
         <div className="section-head">
           <span className="eyebrow">Loved by founders</span>
-          <h2 className="section-title">28,000+ stores running Vesta</h2>
+          <h2 className="section-title">28,000+ stores running ThemePro V2</h2>
         </div>
         <div className="testi-grid">
           {TESTIMONIALS.map((t) => (
@@ -649,10 +649,10 @@ function Testimonials() {
 /* ─────────────────── FAQ ─────────────────── */
 const FAQS = [
   { q: 'How does the one-time license work?',      a: 'Buy once, install on the number of stores your tier allows, and use it forever. You\'ll receive every future update and new demo at no extra cost.' },
-  { q: 'Will it slow down my store?',              a: 'Vesta consistently scores 95–100 on PageSpeed Insights with content-rich storefronts. The theme ships only what each page needs and uses native Shopify primitives wherever possible.' },
+  { q: 'Will it slow down my store?',              a: 'ThemePro V2 consistently scores 95–100 on PageSpeed Insights with content-rich storefronts. The theme ships only what each page needs and uses native Shopify primitives wherever possible.' },
   { q: 'Do I need a developer to install it?',     a: 'No. Every section is configurable through Shopify\'s theme editor. Most merchants are live within an afternoon. Studio and Agency tiers include migration assistance if you\'d like a hand.' },
   { q: 'Can I customize the design later?',        a: 'Yes — color schemes, fonts, layouts and 80+ blocks are exposed in the editor. Liquid source is included if you want to dig deeper.' },
-  { q: 'What if it\'s not for me?',               a: 'We offer a no-questions 30-day refund. If Vesta doesn\'t fit your business, email us within 30 days of purchase.' },
+  { q: 'What if it\'s not for me?',               a: 'We offer a no-questions 30-day refund. If ThemePro V2 doesn\'t fit your business, email us within 30 days of purchase.' },
   { q: 'Is support included?',                     a: 'All tiers ship with support. Starter is email-based; Studio gets priority chat with a 24-hour SLA; Agency adds a dedicated Slack channel.' },
 ];
 
@@ -690,7 +690,7 @@ function FinalCTA() {
         <h2 className="cta-title">Ship the storefront<br />your brand deserves.</h2>
         <p className="cta-sub">One purchase. Every demo. Forever updates. Built for Shopify 2.0.</p>
         <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
-          <a href="#pricing" className="btn btn-primary btn-lg">Buy Vesta — $89 →</a>
+          <a href="#pricing" className="btn btn-primary btn-lg">Buy ThemePro V2 — $89 →</a>
           <a href="#demos"   className="btn btn-ghost-light btn-lg">See live demos</a>
         </div>
         <p style={{ color: 'rgba(255,255,255,0.5)', marginTop: 22, fontSize: 13 }}>
@@ -715,7 +715,7 @@ function Footer() {
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
               <span className="hex-glyph sm"><svg viewBox="0 0 24 24" width="13" height="13"><path d="M12 4v16M4 12h16" stroke="#fff" strokeWidth="2.8" /></svg></span>
-              <span style={{ fontWeight: 900, color: '#fff', fontSize: 22, letterSpacing: '-0.02em' }}>VESTA</span>
+              <span style={{ fontWeight: 900, color: '#fff', fontSize: 22, letterSpacing: '-0.02em' }}>ThemePro V2</span>
             </div>
             <p style={{ maxWidth: 320, lineHeight: 1.55 }}>
               The most opinionated Shopify 2.0 theme on the market. Built for speed, polished for taste, tuned for conversion.
@@ -731,7 +731,7 @@ function Footer() {
           ))}
         </div>
         <div className="footer-legal">
-          <span>© 2026 Vesta Studio. All rights reserved.</span>
+          <span>© 2026 ThemePro V2. All rights reserved.</span>
           <span>Made with ⚡ for Shopify merchants.</span>
         </div>
       </div>
@@ -920,9 +920,9 @@ export default function ThemePage() {
   return (
     <>
       <Head>
-        <title>VESTA — The Perfect Shopify Theme For Your Business</title>
+        <title>ThemePro V2 — The Perfect Shopify Theme For Your Business</title>
         <meta name="description" content="The fastest Shopify 2.0 theme on the market. One-time payment, lifetime updates, 30-day refund. Built for speed, polished for taste, tuned for conversion." />
-        <meta property="og:title" content="VESTA Shopify Theme" />
+        <meta property="og:title" content="ThemePro V2 Shopify Theme" />
         <meta property="og:description" content="The fastest Shopify 2.0 theme on the market." />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
