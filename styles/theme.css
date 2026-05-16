@@ -174,7 +174,7 @@ h2.section-title { font-size: clamp(36px,4vw,60px); margin: 18px 0 14px; }
 /* Performance section */
 .perf-section {
   background: linear-gradient(180deg,var(--g500) 0%,var(--g600) 100%);
-  color: #fff; padding: 110px 0 140px;
+  color: #fff; padding: 110px 0 110px;
   position: relative; overflow: hidden;
 }
 .perf-card {
@@ -185,7 +185,7 @@ h2.section-title { font-size: clamp(36px,4vw,60px); margin: 18px 0 14px; }
 @media (min-width: 600px) {
   .perf-card { padding: 36px; }
 }
-.wave { position: absolute; left: 0; right: 0; bottom: 0; height: 80px; pointer-events: none; }
+.wave { display: none; }
 
 /* Main gauge */
 .gauge-ring {
