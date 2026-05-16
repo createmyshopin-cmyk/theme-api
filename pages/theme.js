@@ -432,9 +432,6 @@ function BoostTraffic() {
             className="boost-img"
           />
         </div>
-        <div style={{ textAlign: 'center', marginTop: 40 }}>
-          <a href="https://superprofile.bio/vp/shopify-415" target="_blank" rel="noopener noreferrer" className="btn btn-dark btn-lg">And More…</a>
-        </div>
       </div>
     </section>
   );
