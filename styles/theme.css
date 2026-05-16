@@ -261,6 +261,17 @@ h2.section-title { font-size: clamp(36px,4vw,60px); margin: 18px 0 14px; }
 .feat-title { font-weight: 700; font-size: 22px; letter-spacing: -0.01em; }
 
 /* Boost */
+.boost-img-wrap {
+  border-radius: var(--rl);
+  overflow: hidden;
+  box-shadow: var(--sl);
+  border: 1px solid rgba(12,13,16,.06);
+}
+.boost-img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
 .boost-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 44px 32px; }
 @media (max-width:880px) { .boost-grid { grid-template-columns: 1fr; } }
 .boost-ill { border-radius: var(--r); height: 260px; display: grid; place-items: center; border: 1px solid rgba(12,13,16,.05); }

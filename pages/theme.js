@@ -425,19 +425,15 @@ function BoostTraffic() {
           <h2 className="section-title">Boost The Traffic</h2>
           <p className="lead">ThemePro V2 focuses on customer experience and behavior to provide the best features for enticing customers and boosting sales.</p>
         </div>
-        <div className="boost-grid">
-          {BOOST_ITEMS.map((it) => (
-            <div key={it.title} className="boost-card">
-              <div className="boost-ill" style={{ background: it.bg }}>
-                <span style={{ fontSize: 72 }}>{it.emoji}</span>
-              </div>
-              <div className="boost-title">{it.title}</div>
-              <div className="boost-desc">{it.desc}</div>
-            </div>
-          ))}
+        <div className="boost-img-wrap">
+          <img
+            src="/boost.png"
+            alt="Boost Traffic Features"
+            className="boost-img"
+          />
         </div>
-        <div style={{ textAlign: 'center', marginTop: 50 }}>
-          <a className="btn btn-dark btn-lg" href="#pricing">And More…</a>
+        <div style={{ textAlign: 'center', marginTop: 40 }}>
+          <a href="https://superprofile.bio/vp/shopify-415" target="_blank" rel="noopener noreferrer" className="btn btn-dark btn-lg">And More…</a>
         </div>
       </div>
     </section>
