@@ -159,6 +159,23 @@ function Hero() {
   );
 }
 
+/* ─────────────────── Hook Banner ─────────────────── */
+function HookBanner() {
+  return (
+    <div className="hook-banner">
+      <div className="hook-inner">
+        <span className="hook-icon">⚡</span>
+        <p className="hook-text">
+          Launch Your Shopify Website <span className="hook-em">Just in 15 mins</span> with ThemePro V2
+        </p>
+        <a href="https://superprofile.bio/vp/shopify-415" target="_blank" rel="noopener noreferrer" className="hook-cta">
+          Get Started →
+        </a>
+      </div>
+    </div>
+  );
+}
+
 /* ─────────────────── Anniversary Offer Section ─────────────────── */
 const ANNIV_MSGS = [
   '🎂 3rd Anniversary Sale — ₹599 only!',
@@ -839,6 +856,7 @@ export default function ThemePage() {
       </Head>
       <Nav />
       <Hero />
+      <HookBanner />
       <AnniversaryOffer />
       <Performance />
       <FeaturesGrid />
