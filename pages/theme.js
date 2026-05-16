@@ -377,25 +377,8 @@ function FeaturesGrid() {
   return (
     <section className="section section-soft" id="features">
       <div className="wrap">
-        <div className="section-head">
-          <span className="eyebrow">Always evolving</span>
-          <h2 className="section-title">The list of great features</h2>
-          <p className="lead">Updated regularly — bringing the best experience to our customers.</p>
-        </div>
-        <div className="feat-grid">
-          {FEATURE_CARDS.map((c) => (
-            <div key={c.title} className="feat-card">
-              <div className="feat-ill" style={{ background: c.color }}>
-                <span style={{ fontSize: 56 }}>{c.emoji}</span>
-              </div>
-              <div className="feat-body">
-                <div className="feat-title">{c.title}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-        <div style={{ textAlign: 'center', marginTop: 50 }}>
-          <a className="btn btn-dark btn-lg" href="#pricing">And More…</a>
+        <div className="boost-img-wrap">
+          <img src="/new.png" alt="The list of great features" className="boost-img" />
         </div>
       </div>
     </section>
