@@ -449,13 +449,8 @@ const PALETTES = [
 
 function ColorSchemes() {
   return (
-    <section className="section" style={{ background: 'linear-gradient(170deg,#d8f0e0,#d6c8ff)' }}>
+    <section className="section" style={{ background: 'linear-gradient(170deg,#d8f0e0,#d6c8ff)', padding: '60px 0' }}>
       <div className="wrap">
-        <div className="section-head">
-          <span className="eyebrow">Hot feature</span>
-          <h2 className="section-title">Color Schemes</h2>
-          <p className="lead">Apply your brand colors for a standout shopping experience across every section.</p>
-        </div>
         <div className="boost-img-wrap">
           <img src="/color.gif" alt="Color Schemes Feature" className="boost-img" />
         </div>
