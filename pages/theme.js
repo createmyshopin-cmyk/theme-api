@@ -622,9 +622,6 @@ function FinalCTA() {
           <a href="https://superprofile.bio/vp/shopify-415" target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-lg">Buy ThemePro V2 — ₹599 →</a>
           <a href="https://themeprov2.myshopify.com/password" target="_blank" rel="noopener noreferrer" className="btn btn-ghost-light btn-lg">See live demos</a>
         </div>
-        <p style={{ color: 'rgba(255,255,255,0.5)', marginTop: 22, fontSize: 13 }}>
-          Secure checkout via Stripe
-        </p>
       </div>
     </section>
   );
