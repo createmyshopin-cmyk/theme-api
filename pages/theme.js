@@ -34,7 +34,7 @@ function Nav() {
           <a href="#faq">FAQ</a>
         </div>
         <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-          <a href="#pricing" className="btn btn-dark btn-sm">Buy theme · ₹599</a>
+          <a href="https://superprofile.bio/vp/shopify-415" target="_blank" rel="noopener noreferrer" className="btn btn-dark btn-sm">Buy theme · ₹599</a>
         </div>
       </div>
     </nav>
@@ -117,7 +117,7 @@ function Hero() {
         </h1>
 
         <div style={{ display: 'flex', gap: 14, justifyContent: 'center', marginTop: 36, flexWrap: 'wrap' }}>
-          <a href="#pricing" className="btn btn-primary btn-lg">
+          <a href="https://superprofile.bio/vp/shopify-415" target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-lg">
             Buy theme — ₹599
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
           </a>
@@ -250,7 +250,7 @@ function AnniversaryOffer() {
 
           {/* CTA */}
           <div className="ann-cta-wrap">
-            <a href="#pricing" className="ann-cta">
+            <a href="https://superprofile.bio/vp/shopify-415" target="_blank" rel="noopener noreferrer" className="ann-cta">
               🎂 Grab Anniversary Deal →
             </a>
             <p className="ann-guarantee">🔒 Secure checkout · 30-day money-back guarantee</p>
@@ -690,7 +690,7 @@ function FinalCTA() {
         <h2 className="cta-title">Ship the storefront<br />your brand deserves.</h2>
         <p className="cta-sub">One purchase. Every demo. Forever updates. Built for Shopify 2.0.</p>
         <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
-          <a href="#pricing" className="btn btn-primary btn-lg">Buy ThemePro V2 — ₹599 →</a>
+          <a href="https://superprofile.bio/vp/shopify-415" target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-lg">Buy ThemePro V2 — ₹599 →</a>
           <a href="#demos"   className="btn btn-ghost-light btn-lg">See live demos</a>
         </div>
         <p style={{ color: 'rgba(255,255,255,0.5)', marginTop: 22, fontSize: 13 }}>
@@ -906,7 +906,7 @@ function MobileStickyBar() {
         </div>
 
         {/* CTA */}
-        <a href="#pricing" className="msb-cta">
+        <a href="https://superprofile.bio/vp/shopify-415" target="_blank" rel="noopener noreferrer" className="msb-cta">
           <span>Buy Now</span>
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
