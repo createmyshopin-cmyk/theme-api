@@ -34,7 +34,8 @@ function Nav() {
           <a href="#faq">FAQ</a>
         </div>
         <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-          <a href="https://superprofile.bio/vp/shopify-415" target="_blank" rel="noopener noreferrer" className="btn btn-dark btn-sm">Buy theme · ₹599</a>
+          <a href="https://superprofile.bio/vp/shopify-415" target="_blank" rel="noopener noreferrer" className="btn btn-dark btn-sm nav-buy-btn">Buy theme · ₹599</a>
+          <a href="#demos" className="btn btn-dark btn-sm nav-preview-btn">Preview Theme</a>
         </div>
       </div>
     </nav>

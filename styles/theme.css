@@ -119,6 +119,13 @@ h2.section-title { font-size: clamp(36px,4vw,60px); margin: 18px 0 14px; }
 .nav-links a:hover { color: var(--g700); }
 @media (max-width:880px) { .nav-links { display: none; } }
 
+/* Nav buttons: buy on desktop, preview on mobile/tablet */
+.nav-preview-btn { display: none; }
+@media (max-width:880px) {
+  .nav-buy-btn { display: none; }
+  .nav-preview-btn { display: inline-flex; }
+}
+
 /* Hero */
 .hero { background: var(--mesh-dark); color: #fff; padding: 120px 0 0; position: relative; overflow: hidden; }
 .seal { width: 156px; height: 156px; margin: 0 auto 28px; display: grid; place-items: center; position: relative; }
