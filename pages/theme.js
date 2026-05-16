@@ -448,9 +448,6 @@ const PALETTES = [
 ];
 
 function ColorSchemes() {
-  const [active, setActive] = useState(0);
-  const p = PALETTES[active];
-
   return (
     <section className="section" style={{ background: 'linear-gradient(170deg,#d8f0e0,#d6c8ff)' }}>
       <div className="wrap">
@@ -459,68 +456,8 @@ function ColorSchemes() {
           <h2 className="section-title">Color Schemes</h2>
           <p className="lead">Apply your brand colors for a standout shopping experience across every section.</p>
         </div>
-
-        <div className="cs-stage">
-          {/* Store preview */}
-          <div className="cs-preview">
-            <div style={{ background: p.primary, padding: '12px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', transition: 'background 250ms' }}>
-              <span style={{ background: 'rgba(255,255,255,0.18)', color: '#fff', padding: '4px 10px', borderRadius: 999, fontSize: 10, fontWeight: 700 }}>LOGO</span>
-              <span style={{ display: 'flex', gap: 10 }}>
-                <span style={{ width: 26, height: 8, background: 'rgba(255,255,255,0.3)', borderRadius: 4 }} />
-                <span style={{ width: 26, height: 8, background: 'rgba(255,255,255,0.3)', borderRadius: 4 }} />
-              </span>
-              <span style={{ width: 26, height: 26, borderRadius: '50%', background: 'rgba(255,255,255,0.2)', display: 'grid', placeItems: 'center', color: '#fff', fontSize: 12 }}>5</span>
-            </div>
-            <div style={{ flex: 1, background: p.bg, padding: 18, display: 'flex', flexDirection: 'column', gap: 14, transition: 'background 250ms' }}>
-              <div>
-                <div style={{ height: 12, width: '60%', background: 'rgba(255,255,255,0.18)', borderRadius: 4, marginBottom: 6 }} />
-                <div style={{ height: 8, width: '80%', background: 'rgba(255,255,255,0.12)', borderRadius: 4 }} />
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 96px', gap: 12, alignItems: 'center' }}>
-                <div>
-                  <div style={{ height: 8, width: '70%', background: 'rgba(255,255,255,0.14)', borderRadius: 4, marginBottom: 8 }} />
-                  <div style={{ height: 8, width: '55%', background: 'rgba(255,255,255,0.10)', borderRadius: 4, marginBottom: 12 }} />
-                  <div style={{ background: p.primary, color: '#fff', padding: '8px 14px', borderRadius: 999, fontSize: 11, fontWeight: 700, display: 'inline-flex', transition: 'background 250ms' }}>Shop Now ▸</div>
-                </div>
-                <div style={{ background: '#f5d3c5', borderRadius: 12, aspectRatio: '3/4', display: 'grid', placeItems: 'center', fontSize: 30 }}>🧴</div>
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 6, marginTop: 'auto' }}>
-                {[0,1,2,3].map((i) => <span key={i} style={{ aspectRatio: 1, background: 'rgba(255,255,255,0.08)', borderRadius: 7 }} />)}
-              </div>
-              <div style={{ background: p.primary, height: 34, borderRadius: 9, display: 'grid', placeItems: 'center', color: '#fff', fontSize: 10, fontWeight: 700, transition: 'background 250ms' }}>────</div>
-            </div>
-          </div>
-
-          {/* Picker controls */}
-          <div className="cs-controls">
-            <div style={{ borderRadius: 14, aspectRatio: '4/3', background: `linear-gradient(180deg,transparent,rgba(0,0,0,0.9)),linear-gradient(90deg,#fff,${p.primary})`, position: 'relative', cursor: 'pointer', overflow: 'hidden' }} onClick={() => setActive((active + 1) % PALETTES.length)}>
-              <div style={{ position: 'absolute', width: 22, height: 22, borderRadius: '50%', border: '3px solid #fff', boxShadow: '0 0 0 1px rgba(0,0,0,0.2)', top: `${20 + active * 12}%`, left: `${40 + (active * 9) % 50}%`, transform: 'translate(-50%,-50%)', transition: 'top 200ms, left 200ms' }} />
-            </div>
-            <div style={{ marginTop: 12, height: 14, borderRadius: 8, background: 'linear-gradient(90deg,#ff5252,#ff9b3d,#f7e94a,#6ddc6a,#2eb8e6,#4a64ff,#9b4af7,#ff5252)' }} />
-
-            <div className="cs-row">
-              <span className="cs-swatch" style={{ background: p.primary }} />
-              <div><div className="cs-lbl">Primary Color</div><div className="cs-hex">{p.primary.toUpperCase()}</div></div>
-            </div>
-            <div className="cs-row">
-              <span className="cs-swatch" style={{ background: p.bg }} />
-              <div><div className="cs-lbl">Background gradient</div><div className="cs-hex">{p.bg.toUpperCase()}</div></div>
-            </div>
-
-            <div style={{ marginTop: 14, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-              {PALETTES.map((pal, i) => (
-                <button key={i} onClick={() => setActive(i)} style={{
-                  display: 'flex', alignItems: 'center', gap: 8,
-                  background: i === active ? '#e6f7ee' : '#fff',
-                  border: i === active ? `1.5px solid ${pal.primary}` : '1.5px solid #e4e7ec',
-                  padding: '6px 12px 6px 6px', borderRadius: 999, cursor: 'pointer', fontSize: 12.5, fontWeight: 700,
-                }}>
-                  <span style={{ width: 18, height: 18, borderRadius: '50%', background: pal.primary }} />
-                  {pal.name}
-                </button>
-              ))}
-            </div>
-          </div>
+        <div className="boost-img-wrap">
+          <img src="/color.gif" alt="Color Schemes Feature" className="boost-img" />
         </div>
       </div>
     </section>
