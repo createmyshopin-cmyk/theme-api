@@ -394,6 +394,9 @@ function FeaturesGrid() {
   return (
     <section className="section section-soft" id="features">
       <div className="wrap">
+        <div className="section-head">
+          <h2 className="section-title">ThemePro V2 Features</h2>
+        </div>
         <div className="boost-img-wrap">
           <img src="/new.png" alt="The list of great features" className="boost-img" />
         </div>
