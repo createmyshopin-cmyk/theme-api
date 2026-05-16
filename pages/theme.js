@@ -937,7 +937,7 @@ export default function ThemePage() {
       <BoostTraffic />
       <ColorSchemes />
       <Stats />
-      <Pricing />
+      {/* <Pricing /> */}
       <Testimonials />
       <FAQ />
       <FinalCTA />
