@@ -34,7 +34,7 @@ function Nav() {
           <a href="#faq">FAQ</a>
         </div>
         <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-          <a href="#pricing" className="btn btn-dark btn-sm">Buy theme · $89</a>
+          <a href="#pricing" className="btn btn-dark btn-sm">Buy theme · ₹599</a>
         </div>
       </div>
     </nav>
@@ -118,7 +118,7 @@ function Hero() {
 
         <div style={{ display: 'flex', gap: 14, justifyContent: 'center', marginTop: 36, flexWrap: 'wrap' }}>
           <a href="#pricing" className="btn btn-primary btn-lg">
-            Buy theme — $89
+            Buy theme — ₹599
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
           </a>
           <a href="#demos" className="btn btn-ghost-light btn-lg">
@@ -690,7 +690,7 @@ function FinalCTA() {
         <h2 className="cta-title">Ship the storefront<br />your brand deserves.</h2>
         <p className="cta-sub">One purchase. Every demo. Forever updates. Built for Shopify 2.0.</p>
         <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
-          <a href="#pricing" className="btn btn-primary btn-lg">Buy ThemePro V2 — $89 →</a>
+          <a href="#pricing" className="btn btn-primary btn-lg">Buy ThemePro V2 — ₹599 →</a>
           <a href="#demos"   className="btn btn-ghost-light btn-lg">See live demos</a>
         </div>
         <p style={{ color: 'rgba(255,255,255,0.5)', marginTop: 22, fontSize: 13 }}>
