@@ -35,7 +35,7 @@ function Nav() {
         </div>
         <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
           <a href="https://superprofile.bio/vp/shopify-415" target="_blank" rel="noopener noreferrer" className="btn btn-dark btn-sm nav-buy-btn">Buy theme · ₹599</a>
-          <a href="#demos" className="btn btn-dark btn-sm nav-preview-btn">Preview Theme</a>
+          <a href="https://themeprov2.myshopify.com/password" target="_blank" rel="noopener noreferrer" className="btn btn-dark btn-sm nav-preview-btn">Preview Theme</a>
         </div>
       </div>
     </nav>
@@ -122,7 +122,7 @@ function Hero() {
             Buy theme — ₹599
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
           </a>
-          <a href="#demos" className="btn btn-ghost-light btn-lg">
+          <a href="https://themeprov2.myshopify.com/password" target="_blank" rel="noopener noreferrer" className="btn btn-ghost-light btn-lg">
             <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
             Live preview
           </a>
@@ -620,7 +620,7 @@ function FinalCTA() {
         <p className="cta-sub">One purchase. Every demo. Forever updates. Built for Shopify 2.0.</p>
         <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
           <a href="https://superprofile.bio/vp/shopify-415" target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-lg">Buy ThemePro V2 — ₹599 →</a>
-          <a href="#demos"   className="btn btn-ghost-light btn-lg">See live demos</a>
+          <a href="https://themeprov2.myshopify.com/password" target="_blank" rel="noopener noreferrer" className="btn btn-ghost-light btn-lg">See live demos</a>
         </div>
         <p style={{ color: 'rgba(255,255,255,0.5)', marginTop: 22, fontSize: 13 }}>
           Secure checkout via Stripe
