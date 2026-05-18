@@ -14,10 +14,33 @@ export default async function handler(req, res) {
 
   const normalized = whatsapp.replace(/[^\d+]/g, '')
 
-  // Generate a 6-digit code
-  const code = String(Math.floor(100000 + Math.random() * 900000))
+  // Check if this phone already has a license
+  const existing = await query(
+    'SELECT license_code, is_active FROM licenses WHERE REPLACE(REPLACE(phone, "+", ""), " ", "") LIKE ?',
+    ['%' + normalized.replace(/^\+/, '')]
+  )
 
-  // Upsert — same shop+whatsapp gets a fresh code each time
+  let code
+  if (existing.length > 0) {
+    // Reuse existing license code
+    code = existing[0].license_code
+  } else {
+    // Generate unique 6-digit code not already in licenses
+    let unique = false
+    while (!unique) {
+      code = String(Math.floor(100000 + Math.random() * 900000))
+      const clash = await query('SELECT id FROM licenses WHERE license_code = ?', [code])
+      if (clash.length === 0) unique = true
+    }
+    // Auto-create license record
+    await query(
+      `INSERT INTO licenses (phone, license_code, is_active, created_at)
+       VALUES (?, ?, 0, NOW())`,
+      [normalized, code]
+    )
+  }
+
+  // Upsert registration record
   await query(
     `INSERT INTO whatsapp_registrations (whatsapp, shop_domain, code, created_at)
      VALUES (?, ?, ?, NOW())
