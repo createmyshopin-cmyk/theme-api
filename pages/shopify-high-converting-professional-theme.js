@@ -1,8 +1,11 @@
 import Head from 'next/head';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, createContext, useContext } from 'react';
+
+const CurrencyContext = createContext();
 
 /* ─────────────────── Nav ─────────────────── */
 function Nav() {
+  const { currency, setCurrency, formatPrice } = useContext(CurrencyContext);
   return (
     <nav style={{
       position: 'sticky', top: 0, zIndex: 50,
@@ -25,7 +28,21 @@ function Nav() {
           <a href="#faq">FAQ</a>
         </div>
         <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-          <a href="https://superprofile.bio/vp/shopify-415" target="_blank" rel="noopener noreferrer" className="btn btn-dark btn-sm nav-buy-btn">Buy theme · ₹2499</a>
+          <style>{`
+            @media (max-width: 768px) {
+              .currency-selector { display: none !important; }
+            }
+          `}</style>
+          <select 
+            className="currency-selector"
+            value={currency} 
+            onChange={(e) => setCurrency(e.target.value)}
+            style={{ padding: '6px 10px', borderRadius: '6px', border: '1px solid #ddd', background: '#fff', fontSize: '13px', fontWeight: '600', cursor: 'pointer' }}
+          >
+            <option value="INR">INR (₹)</option>
+            <option value="USD">USD ($)</option>
+          </select>
+          <a href="https://superprofile.bio/vp/shopify-415" target="_blank" rel="noopener noreferrer" className="btn btn-dark btn-sm nav-buy-btn">Buy theme · {formatPrice('2499', '49')}</a>
           <a href="https://themeprov2.myshopify.com/password" target="_blank" rel="noopener noreferrer" className="btn btn-dark btn-sm nav-preview-btn">Preview Theme &nbsp;<span style={{ color: '#ff3333', fontWeight: 700, display: 'inline' }} className="nav-pw-text">Shopify store password: "V2"</span></a>
         </div>
       </div>
@@ -35,18 +52,23 @@ function Nav() {
 
 /* ─────────────────── Hero ─────────────────── */
 function Hero() {
+  const { formatPrice } = useContext(CurrencyContext);
   return (
     <header className="hero">
       <div className="wrap" style={{ textAlign: 'center' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', margin: '0 0 10px' }}>
+          <img src="/shopify-part-white.png" alt="Shopify" style={{ width: '40%', maxWidth: 180, height: 'auto', opacity: 0.95 }} />
+        </div>
+
         <span className="eyebrow-text">The fastest Shopify theme on the market</span>
         <h1 className="hero-headline">
           The Perfect <span className="highlight">Shopify Theme</span><br />
           For Your Business.
         </h1>
 
-        <div style={{ display: 'flex', gap: 14, justifyContent: 'center', marginTop: 36, flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: 14, justifyContent: 'center', marginTop: 12, flexWrap: 'wrap' }}>
           <a href="https://superprofile.bio/vp/shopify-415" target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-lg">
-            Buy theme — ₹2499
+            Buy theme — {formatPrice('2499', '49')}
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
           </a>
           <a href="https://themeprov2.myshopify.com/password" target="_blank" rel="noopener noreferrer" className="btn btn-ghost-light btn-lg">
@@ -131,18 +153,19 @@ function HookBanner() {
 }
 
 /* ─────────────────── Anniversary Offer Section ─────────────────── */
-const ANNIV_MSGS = [
-  '🎂 3rd Anniversary Sale — ₹2499 only!',
-  '🔥 Flash Sale — Only a few spots left!',
-  '⚡ 247 people viewing this right now',
-  '🚨 Price goes up when timer hits zero!',
-  '💸 Save ₹24,201 today only!',
-  '⏳ Anniversary offer — grab it before it\'s gone',
-  '🏆 #1 Rated Shopify theme in India',
-  '🎯 Offer valid for today only!',
-];
-
 function AnniversaryOffer() {
+  const { formatPrice } = useContext(CurrencyContext);
+  const ANNIV_MSGS = [
+    `🎂 3rd Anniversary Sale — ${formatPrice('2499', '49')} only!`,
+    '🔥 Flash Sale — Only a few spots left!',
+    '⚡ 247 people viewing this right now',
+    '🚨 Price goes up when timer hits zero!',
+    `💸 Save ${formatPrice('24,201', '250')} today only!`,
+    '⏳ Anniversary offer — grab it before it\'s gone',
+    '🏆 #1 Rated Shopify theme',
+    '🎯 Offer valid for today only!',
+  ];
+
   const [msgIdx,  setMsgIdx]  = useState(0);
   const [anim,    setAnim]    = useState('ann-msg-in');
 
@@ -178,7 +201,7 @@ function AnniversaryOffer() {
           <h2 className="ann-headline">
             Celebrate With Us —<br />
             Get The Theme at<br />
-            <span className="ann-price-inline">₹2499</span>
+            <span className="ann-price-inline">{formatPrice('2499', '49')}</span>
           </h2>
           {/* Social proof — desktop shows here */}
           <div className="ann-proof ann-proof-desktop" style={{ display: 'none' }}>
@@ -199,12 +222,12 @@ function AnniversaryOffer() {
           <div className="ann-price-card">
             <div className="ann-price-row">
               <div className="ann-price-block">
-                <span className="ann-now">₹2499</span>
-                <span className="ann-mrp">₹26,700</span>
+                <span className="ann-now">{formatPrice('2499', '49')}</span>
+                <span className="ann-mrp">{formatPrice('26,700', '299')}</span>
               </div>
               <div className="ann-off-pill">91% OFF</div>
             </div>
-            <div className="ann-saved-badge">🎉 You save ₹24,201 today!</div>
+            <div className="ann-saved-badge">🎉 You save {formatPrice('24,201', '250')} today!</div>
             <div className="ann-price-meta">
               <span className="ann-price-tag">⏱ Limited time</span>
               <span className="ann-price-tag">📅 Today only</span>
@@ -625,18 +648,19 @@ function PurchaseToast() {
 /* ─────────────────── Mobile Sticky Bar ─────────────────── */
 const TIMER_START = 9 * 60;
 
-const URGENCY_MSGS = [
-  { icon: '🎂', text: '3rd Anniversary Sale — ₹2499 only!' },
-  { icon: '🔥', text: 'Flash Sale — Only a few spots left!' },
-  { icon: '⚡', text: '247 people viewing this right now' },
-  { icon: '🚨', text: 'Price goes up when timer hits zero!' },
-  { icon: '✅', text: '28,000+ stores already use this theme' },
-  { icon: '💸', text: 'Save ₹24,201 today only!' },
-  { icon: '⏳', text: 'Anniversary offer — grab it before it\'s gone' },
-  { icon: '🏆', text: '#1 Rated Shopify theme in India' },
-];
-
 function MobileStickyBar() {
+  const { formatPrice } = useContext(CurrencyContext);
+  const URGENCY_MSGS = [
+    { icon: '🎂', text: `3rd Anniversary Sale — ${formatPrice('2499', '49')} only!` },
+    { icon: '🔥', text: 'Flash Sale — Only a few spots left!' },
+    { icon: '⚡', text: '247 people viewing this right now' },
+    { icon: '🚨', text: 'Price goes up when timer hits zero!' },
+    { icon: '✅', text: '28,000+ stores already use this theme' },
+    { icon: '💸', text: `Save ${formatPrice('24,201', '250')} today only!` },
+    { icon: '⏳', text: 'Anniversary offer — grab it before it\'s gone' },
+    { icon: '🏆', text: '#1 Rated Shopify theme' },
+  ];
+
   const [seconds,  setSeconds]  = useState(TIMER_START);
   const [msgIdx,   setMsgIdx]   = useState(0);
   const [msgAnim,  setMsgAnim]  = useState('msb-msg-in');
@@ -687,8 +711,8 @@ function MobileStickyBar() {
             🎂 3rd Anniversary Offer
           </div>
           <div className="msb-price-row">
-            <span className="msb-now">₹2499</span>
-            <span className="msb-mrp">₹26,700</span>
+            <span className="msb-now">{formatPrice('2499', '49')}</span>
+            <span className="msb-mrp">{formatPrice('26,700', '299')}</span>
             <span className="msb-badge">91% OFF</span>
           </div>
           <div className="msb-sublabel">Limited time · Today only</div>
@@ -704,10 +728,135 @@ function MobileStickyBar() {
   );
 }
 
+/* ─────────────────── Problem Agitation ─────────────────── */
+function ProblemAgitation() {
+  return (
+    <section className="section section-soft" style={{ background: '#fcfcfc', borderBottom: '1px solid rgba(12,13,16,0.05)' }}>
+      <div className="wrap">
+        <div className="section-head" style={{ maxWidth: 700 }}>
+          <span className="eyebrow" style={{ color: '#ff3333' }}>The Ugly Truth</span>
+          <h2 className="section-title">Why Your Store Is Bleeding Sales</h2>
+          <p className="lead">Most Shopify themes look good but perform terribly. If you're dealing with any of these issues, your theme is actively costing you money.</p>
+        </div>
+        
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 30, marginTop: 40 }}>
+          <div style={{ padding: 30, background: '#fff', borderRadius: 16, border: '1px solid rgba(12,13,16,0.05)', boxShadow: '0 4px 20px rgba(0,0,0,0.02)' }}>
+            <div style={{ fontSize: 32, marginBottom: 15 }}>🐌</div>
+            <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 10 }}>Sluggish Load Times</h3>
+            <p style={{ color: '#5b6270', fontSize: 15, lineHeight: 1.6 }}>53% of visitors leave if a mobile site takes longer than 3 seconds to load. Heavy themes are killing your ad spend.</p>
+          </div>
+          <div style={{ padding: 30, background: '#fff', borderRadius: 16, border: '1px solid rgba(12,13,16,0.05)', boxShadow: '0 4px 20px rgba(0,0,0,0.02)' }}>
+            <div style={{ fontSize: 32, marginBottom: 15 }}>💸</div>
+            <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 10 }}>Expensive App Subscriptions</h3>
+            <p style={{ color: '#5b6270', fontSize: 15, lineHeight: 1.6 }}>Paying $150+ every month for countdown timers, upsells, and trust badges just to get basic conversion features.</p>
+          </div>
+          <div style={{ padding: 30, background: '#fff', borderRadius: 16, border: '1px solid rgba(12,13,16,0.05)', boxShadow: '0 4px 20px rgba(0,0,0,0.02)' }}>
+            <div style={{ fontSize: 32, marginBottom: 15 }}>🧩</div>
+            <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 10 }}>Clunky Customization</h3>
+            <p style={{ color: '#5b6270', fontSize: 15, lineHeight: 1.6 }}>Needing to hire an expensive developer every time you want to make a simple layout change or add a new section.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─────────────────── App Replacement ─────────────────── */
+function AppReplacement() {
+  const { formatPrice } = useContext(CurrencyContext);
+  const apps = [
+    { name: 'Product Upsells & Cross-sells', price: formatPrice('2,400/mo', '29/mo') },
+    { name: 'Sticky Add-To-Cart', price: formatPrice('1,150/mo', '14/mo') },
+    { name: 'Countdown Timers & Urgency', price: formatPrice('750/mo', '9/mo') },
+    { name: 'Trust Badges & Security', price: formatPrice('400/mo', '5/mo') },
+    { name: 'Recently Viewed Products', price: formatPrice('1,000/mo', '12/mo') },
+    { name: 'Advanced Mega Menu', price: formatPrice('1,500/mo', '19/mo') },
+    { name: 'Color Swatches', price: formatPrice('750/mo', '9/mo') },
+    { name: 'Sales Pop-up Notifications', price: formatPrice('1,250/mo', '15/mo') },
+  ];
+  
+  return (
+    <section className="section" style={{ background: '#0c0d10', color: '#fff' }}>
+      <div className="wrap">
+        <div className="section-head" style={{ maxWidth: 800 }}>
+          <span className="badge-white" style={{ background: 'rgba(255,255,255,0.1)' }}>Save {formatPrice('1,10,400+', '1,344+')} Per Year</span>
+          <h2 className="section-title" style={{ color: '#fff' }}>Stop Paying For Expensive Shopify Apps</h2>
+          <p className="lead" style={{ color: 'rgba(255,255,255,0.7)' }}>ThemePro V2 comes with all the premium conversion-boosting features built directly into the core code. No extra monthly fees. No bloated third-party code slowing down your store.</p>
+        </div>
+        
+        <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 24, padding: '40px', marginTop: 40, maxWidth: 800, margin: '40px auto 0' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 15 }}>
+            {apps.map((app, i) => (
+              <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 15, borderBottom: i !== apps.length - 1 ? '1px solid rgba(255,255,255,0.06)' : 'none' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#26a66a" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                  <span style={{ fontSize: 16, fontWeight: 500 }}>{app.name}</span>
+                </div>
+                <span style={{ color: 'rgba(255,255,255,0.4)', textDecoration: 'line-through' }}>{app.price}</span>
+              </div>
+            ))}
+          </div>
+          
+          <div style={{ marginTop: 30, paddingTop: 30, borderTop: '2px dashed rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ fontSize: 20, fontWeight: 600 }}>Total App Savings</span>
+            <div style={{ textAlign: 'right' }}>
+              <span style={{ fontSize: 28, fontWeight: 800, color: '#26a66a' }}>{formatPrice('9,200/mo', '112/mo')}</span>
+              <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>({formatPrice('1,10,400/year', '1,344/year')})</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─────────────────── Risk Reversal ─────────────────── */
+function RiskReversal() {
+  return (
+    <section className="section section-soft" style={{ padding: '60px 0', background: '#f8f9fa' }}>
+      <div className="wrap" style={{ maxWidth: 800 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', background: '#fff', padding: '50px 40px', borderRadius: 24, boxShadow: '0 10px 40px rgba(0,0,0,0.04)', border: '1px solid rgba(12,13,16,0.05)' }}>
+          <div style={{ width: 70, height: 70, marginBottom: 20, background: '#eefcf5', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#26a66a' }}>
+            <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h2 style={{ fontSize: 28, fontWeight: 800, marginBottom: 15 }}>100% Risk-Free 30-Day Guarantee</h2>
+          <p style={{ color: '#5b6270', fontSize: 16, lineHeight: 1.6, marginBottom: 30 }}>
+            We are incredibly confident that ThemePro V2 will boost your store's speed and conversion rate. However, if you are not completely satisfied with the theme within 30 days of purchase, simply reach out to our support team, and we will issue a full, no-questions-asked refund.
+          </p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, color: '#26a66a', fontWeight: 600, fontSize: 15 }}>
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Secure, encrypted checkout
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ─────────────────── Page ─────────────────── */
 export default function ThemePage() {
+  const [currency, setCurrency] = useState('INR');
+  const [hasHydrated, setHasHydrated] = useState(false);
+
+  useEffect(() => {
+    setHasHydrated(true);
+    fetch('https://ipapi.co/json/')
+      .then(res => res.json())
+      .then(data => {
+        if (data.country_code && data.country_code !== 'IN') {
+          setCurrency('USD');
+        }
+      })
+      .catch(err => console.error('Error auto-detecting currency:', err));
+  }, []);
+
+  const formatPrice = (inrVal, usdVal) => {
+    if (!hasHydrated) return `₹${inrVal}`; // Server-side default to match initial render
+    return currency === 'INR' ? `₹${inrVal}` : `$${usdVal}`;
+  };
+
   return (
-    <>
+    <CurrencyContext.Provider value={{ currency, setCurrency, formatPrice }}>
       <Head>
         <title>ThemePro V2 — The Perfect Shopify Theme For Your Business</title>
         <meta name="description" content="The fastest Shopify 2.0 theme on the market. One-time payment, lifetime updates, 30-day refund. Built for speed, polished for taste, tuned for conversion." />
@@ -721,20 +870,23 @@ export default function ThemePage() {
       <Nav />
       <Hero />
       <HookBanner />
+      <ProblemAgitation />
       <AnniversaryOffer />
       <Performance />
       <FeaturesGrid />
       <BoostTraffic />
+      <AppReplacement />
       <ColorSchemes />
       <Stats />
 
       <Testimonials />
       <FAQ />
+      <RiskReversal />
       <FinalCTA />
       <Footer />
       <PurchaseToast />
       <MobileStickyBar />
-    </>
+    </CurrencyContext.Provider>
   );
 }
 
