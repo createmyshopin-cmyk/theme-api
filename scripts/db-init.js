@@ -24,14 +24,16 @@ async function init() {
       activated_at  DATETIME     DEFAULT NULL,
       is_active     TINYINT(1)   NOT NULL DEFAULT 0,
       created_at    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-      notes         TEXT         DEFAULT NULL
+      notes         TEXT         DEFAULT NULL,
+      theme_name    VARCHAR(255) DEFAULT NULL,
+      last_seen     DATETIME     DEFAULT NULL
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
   `)
 
-  // Add store_name column to existing tables (safe — IF NOT EXISTS equivalent)
-  await conn.execute(`
-    ALTER TABLE licenses ADD COLUMN IF NOT EXISTS store_name VARCHAR(255) DEFAULT NULL AFTER shop_domain
-  `).catch(() => {})
+  // Safe migrations for existing tables
+  await conn.execute(`ALTER TABLE licenses ADD COLUMN IF NOT EXISTS store_name  VARCHAR(255) DEFAULT NULL AFTER shop_domain`).catch(() => {})
+  await conn.execute(`ALTER TABLE licenses ADD COLUMN IF NOT EXISTS theme_name  VARCHAR(255) DEFAULT NULL`).catch(() => {})
+  await conn.execute(`ALTER TABLE licenses ADD COLUMN IF NOT EXISTS last_seen   DATETIME     DEFAULT NULL`).catch(() => {})
   console.log('Table `licenses` ready')
 
   await conn.execute(`

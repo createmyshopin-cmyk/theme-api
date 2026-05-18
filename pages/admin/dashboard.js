@@ -150,6 +150,17 @@ export default function Dashboard() {
     showToast(`Copied ${code}`)
   }
 
+  function relativeTime(dateStr) {
+    const diff = Math.floor((Date.now() - new Date(dateStr)) / 1000)
+    if (diff < 60)   return 'just now'
+    if (diff < 3600) return `${Math.floor(diff/60)}m ago`
+    if (diff < 86400) return `${Math.floor(diff/3600)}h ago`
+    return `${Math.floor(diff/86400)}d ago`
+  }
+  function isRecent(dateStr) {
+    return (Date.now() - new Date(dateStr)) < 24 * 60 * 60 * 1000
+  }
+
   const now = new Date()
   const stats = {
     total:     licenses.length,
@@ -431,7 +442,7 @@ export default function Dashboard() {
                     <div id="cms-desktop-table" style={s.tableWrap}>
                       <table style={s.table}>
                         <thead>
-                          <tr>{['WhatsApp / Phone','Store Name','Shop Domain','Activated Date'].map(h=>(
+                          <tr>{['WhatsApp / Phone','Store Name','Shop Domain','Theme Used','Activated Date','Last Seen'].map(h=>(
                             <th key={h} style={s.th}>{h}</th>
                           ))}</tr>
                         </thead>
@@ -450,9 +461,21 @@ export default function Dashboard() {
                                   : <span style={s.muted}>—</span>}
                               </td>
                               <td style={s.td}>
+                                {lic.theme_name
+                                  ? <span style={{...s.notesText, color:'#6366f1', fontWeight:600}}>🎨 {lic.theme_name}</span>
+                                  : <span style={s.muted}>—</span>}
+                              </td>
+                              <td style={s.td}>
                                 <span style={s.dateText}>
                                   {lic.activated_at ? new Date(lic.activated_at).toLocaleString('en-IN') : <span style={s.muted}>—</span>}
                                 </span>
+                              </td>
+                              <td style={s.td}>
+                                {lic.last_seen ? (
+                                  <span style={{...s.dateText, color: isRecent(lic.last_seen) ? '#16a34a' : '#64748b', fontWeight: isRecent(lic.last_seen) ? 600 : 400}}>
+                                    {relativeTime(lic.last_seen)}
+                                  </span>
+                                ) : <span style={s.muted}>—</span>}
                               </td>
                             </tr>
                           ))}
@@ -623,7 +646,7 @@ export default function Dashboard() {
                       <table style={s.table}>
                         <thead>
                           <tr>
-                            {['Phone', 'Code', 'Theme Name', 'Store Name', 'Shop Domain', 'Status', 'Created', 'Activated', 'Actions'].map(h => (
+                            {['Phone', 'Code', 'Theme Name', 'Store Name', 'Shop Domain', 'Status', 'Created', 'Activated', 'Last Seen', 'Actions'].map(h => (
                               <th key={h} style={s.th}>{h}</th>
                             ))}
                           </tr>
@@ -664,6 +687,13 @@ export default function Dashboard() {
                                 <span style={s.dateText}>
                                   {lic.activated_at ? new Date(lic.activated_at).toLocaleDateString('en-IN') : <span style={s.muted}>—</span>}
                                 </span>
+                              </td>
+                              <td style={s.td}>
+                                {lic.last_seen ? (
+                                  <span style={{...s.dateText, color: isRecent(lic.last_seen) ? '#16a34a' : '#64748b'}}>
+                                    {relativeTime(lic.last_seen)}
+                                  </span>
+                                ) : <span style={s.muted}>—</span>}
                               </td>
                               <td style={s.td}>
                                 <div style={s.actions}>
