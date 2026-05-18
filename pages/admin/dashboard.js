@@ -172,9 +172,9 @@ export default function Dashboard() {
     if (!token) return
     try {
       const res  = await fetch('/api/admin/licenses', { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' } })
-      if (!res.ok) return
+      if (!res.ok) { setLoading(false); return }
       const data = await res.json()
-      if (!Array.isArray(data)) return
+      if (!Array.isArray(data)) { setLoading(false); return }
 
       const currentIds    = new Set(data.map(l => l.id))
       const activatedOnes = data.filter(l => l.is_active)
@@ -183,6 +183,7 @@ export default function Dashboard() {
       if (knownLicenseIds.current === null) {
         knownLicenseIds.current = new Set(data.map(l => `${l.id}:${l.is_active ? 1 : 0}`))
         setLicenses(data)
+        setLoading(false)
         return
       }
 
@@ -212,7 +213,8 @@ export default function Dashboard() {
 
       knownLicenseIds.current = new Set(data.map(l => `${l.id}:${l.is_active ? 1 : 0}`))
       setLicenses(data)
-    } catch {}
+      setLoading(false)
+    } catch { setLoading(false) }
   }, [token])
 
   const pollRegistrations = useCallback(async () => {
