@@ -3,9 +3,10 @@ import { useRouter } from 'next/router'
 import Head from 'next/head'
 
 const NAV = [
-  { id: 'licenses', label: 'All Licenses', icon: '🔑' },
-  { id: 'pending',  label: 'Pending',       icon: '⏳' },
-  { id: 'generate', label: 'Generate',      icon: '✨' },
+  { id: 'licenses',      label: 'All Licenses',   icon: '🔑' },
+  { id: 'pending',       label: 'Pending',         icon: '⏳' },
+  { id: 'registrations', label: 'Registrations',   icon: '📱' },
+  { id: 'generate',      label: 'Generate',        icon: '✨' },
 ]
 
 export default function Dashboard() {
@@ -27,6 +28,8 @@ export default function Dashboard() {
   const [pinValue, setPinValue] = useState('')
   const [pinError, setPinError] = useState('')
   const [pinLoading, setPinLoading] = useState(false)
+  const [registrations, setRegistrations] = useState([])
+  const [regLoading, setRegLoading] = useState(false)
 
   useEffect(() => {
     const t = localStorage.getItem('triara_admin_token')
@@ -55,6 +58,19 @@ export default function Dashboard() {
   }, [token])
 
   useEffect(() => { fetchLicenses() }, [fetchLicenses])
+
+  const fetchRegistrations = useCallback(async () => {
+    if (!token) return
+    setRegLoading(true)
+    try {
+      const res = await fetch('/api/admin/registrations', { headers: authHeaders() })
+      const data = await res.json()
+      setRegistrations(Array.isArray(data) ? data : [])
+    } catch {}
+    finally { setRegLoading(false) }
+  }, [token])
+
+  useEffect(() => { if (activeNav === 'registrations') fetchRegistrations() }, [activeNav, fetchRegistrations])
 
   function showToast(msg, type = 'success') {
     setToast({ msg, type })
@@ -175,6 +191,7 @@ export default function Dashboard() {
   }
 
   const isTable = activeNav === 'licenses' || activeNav === 'pending'
+  const isRegistrations = activeNav === 'registrations'
 
   return (
     <>
@@ -251,14 +268,16 @@ export default function Dashboard() {
               </button>
               <div>
                 <h1 style={s.pageTitle}>
-                  {activeNav === 'licenses' ? 'All Licenses'
-                   : activeNav === 'pending' ? 'Pending Licenses'
+                  {activeNav === 'licenses'      ? 'All Licenses'
+                   : activeNav === 'pending'     ? 'Pending Licenses'
+                   : activeNav === 'registrations' ? 'WhatsApp Registrations'
                    : 'Generate License'}
                 </h1>
                 <p style={s.pageSub}>
-                  {activeNav === 'licenses' && `${stats.total} total · ${stats.active} active`}
-                  {activeNav === 'pending' && `${stats.inactive} not yet activated`}
-                  {activeNav === 'generate' && 'Create a new license key'}
+                  {activeNav === 'licenses'      && `${stats.total} total · ${stats.active} active`}
+                  {activeNav === 'pending'        && `${stats.inactive} not yet activated`}
+                  {activeNav === 'registrations'  && `${registrations.length} registered`}
+                  {activeNav === 'generate'       && 'Create a new license key'}
                 </p>
               </div>
             </div>
@@ -304,6 +323,74 @@ export default function Dashboard() {
                 </div>
               ))}
             </div>
+
+            {/* Registrations */}
+            {isRegistrations && (
+              <div style={s.tableCard}>
+                {regLoading ? (
+                  <div style={s.centerMsg}><div style={s.spinner} /><p style={s.mutedText}>Loading…</p></div>
+                ) : registrations.length === 0 ? (
+                  <div style={s.centerMsg}>
+                    <div style={{fontSize:40,marginBottom:12}}>📱</div>
+                    <p style={s.mutedText}>No WhatsApp registrations yet.</p>
+                  </div>
+                ) : (
+                  <>
+                    {/* Mobile cards */}
+                    <div id="cms-mobile-cards" style={s.mobileCards}>
+                      {registrations.map(r => (
+                        <div key={r.id} style={s.mobileCard}>
+                          <div style={s.mobileCardRow}>
+                            <span style={s.mobilePhone}>{r.whatsapp}</span>
+                            <span style={{...s.codeChip, background:'#f0fdf4', color:'#16a34a', border:'1px solid #bbf7d0'}}
+                              onClick={() => copyCode(r.code)}>{r.code}</span>
+                          </div>
+                          <div style={s.mobileDomain}>
+                            <a href={`https://${r.shop_domain}`} target="_blank" rel="noopener" style={s.domainLink}>{r.shop_domain}</a>
+                          </div>
+                          <div style={s.mobileDate}>
+                            {r.created_at ? new Date(r.created_at).toLocaleString('en-IN') : '—'}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    {/* Desktop table */}
+                    <div id="cms-desktop-table" style={s.tableWrap}>
+                      <table style={s.table}>
+                        <thead>
+                          <tr>
+                            {['WhatsApp', 'Generated Code', 'Shop Domain', 'Registered At'].map(h => (
+                              <th key={h} style={s.th}>{h}</th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {registrations.map((r, idx) => (
+                            <tr key={r.id} style={{...s.tr, background: idx % 2 === 0 ? '#fff' : '#f8fafc'}}>
+                              <td style={s.td}><span style={s.phone}>{r.whatsapp}</span></td>
+                              <td style={s.td}>
+                                <span style={{...s.codeChip, background:'#f0fdf4', color:'#16a34a', border:'1px solid #bbf7d0', cursor:'pointer'}}
+                                  onClick={() => copyCode(r.code)} title="Click to copy">{r.code}</span>
+                              </td>
+                              <td style={s.td}>
+                                {r.shop_domain
+                                  ? <a href={`https://${r.shop_domain}`} target="_blank" rel="noopener" style={s.domainLink}>{r.shop_domain}</a>
+                                  : <span style={s.muted}>—</span>}
+                              </td>
+                              <td style={s.td}>
+                                <span style={s.dateText}>
+                                  {r.created_at ? new Date(r.created_at).toLocaleString('en-IN') : '—'}
+                                </span>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
 
             {/* Generate */}
             {activeNav === 'generate' && (

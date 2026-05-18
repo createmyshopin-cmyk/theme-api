@@ -35,6 +35,18 @@ async function init() {
   console.log('Table `licenses` ready')
 
   await conn.execute(`
+    CREATE TABLE IF NOT EXISTS whatsapp_registrations (
+      id            INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+      whatsapp      VARCHAR(20)  NOT NULL,
+      shop_domain   VARCHAR(255) NOT NULL,
+      code          CHAR(6)      NOT NULL,
+      created_at    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      UNIQUE KEY uq_shop_wa (shop_domain, whatsapp)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `)
+  console.log('Table `whatsapp_registrations` ready')
+
+  await conn.execute(`
     CREATE TABLE IF NOT EXISTS activation_log (
       id            INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
       license_id    INT UNSIGNED NOT NULL,
