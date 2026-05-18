@@ -56,17 +56,41 @@ function Hero() {
   return (
     <header className="hero">
       <div className="wrap" style={{ textAlign: 'center' }}>
-        <div style={{ display: 'flex', justifyContent: 'center', margin: '0 0 10px' }}>
-          <img src="/shopify-part-white.png" alt="Shopify Partners" width="180" height="48" fetchPriority="high" style={{ width: '40%', maxWidth: 180, height: 'auto', opacity: 0.95 }} />
+
+        {/* Trust bar — Shopify logo + badge pill inline */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, marginBottom: 28, flexWrap: 'wrap' }}>
+          <img src="/shopify-part-white.png" alt="Shopify Partners" width="160" height="43" fetchPriority="high" style={{ height: 36, width: 'auto', opacity: 0.92 }} />
+          <span style={{ width: 1, height: 28, background: 'rgba(255,255,255,0.18)', display: 'inline-block' }} />
+          <span style={{
+            display: 'inline-flex', alignItems: 'center', gap: 6,
+            background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)',
+            borderRadius: 99, padding: '5px 14px', fontSize: 12.5, fontWeight: 600, color: 'rgba(255,255,255,0.82)',
+            letterSpacing: '0.04em',
+          }}>
+            <svg viewBox="0 0 10 10" width="8" height="8"><circle cx="5" cy="5" r="5" fill="#4ade80" /></svg>
+            99/100 PageSpeed · Trusted by 100+ Stores
+          </span>
         </div>
 
-        <span className="eyebrow-text">The fastest Shopify theme on the market</span>
-        <h1 className="hero-headline">
-          The Perfect <span className="highlight">Shopify Theme</span><br />
-          For Your Business.
+        {/* Eyebrow */}
+        <span className="eyebrow-text" style={{ marginTop: 0, marginBottom: 18 }}>
+          The fastest Shopify theme on the market
+        </span>
+
+        {/* Main headline */}
+        <h1 className="hero-headline" style={{ fontSize: 'clamp(42px, 6vw, 80px)', lineHeight: 1.08, fontWeight: 900, letterSpacing: '-0.03em', marginBottom: 22 }}>
+          The Perfect<br />
+          <span className="highlight">Shopify Theme</span><br />
+          <span style={{ color: 'rgba(255,255,255,0.75)', fontWeight: 700, fontSize: '0.72em', letterSpacing: '-0.02em' }}>For Every Business.</span>
         </h1>
 
-        <div style={{ display: 'flex', gap: 14, justifyContent: 'center', marginTop: 12, flexWrap: 'wrap' }}>
+        {/* Sub-headline */}
+        <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: 'clamp(15px, 1.8vw, 18px)', maxWidth: 560, margin: '0 auto 32px', lineHeight: 1.6, fontWeight: 400 }}>
+          Launch a stunning, ultra-fast store in minutes — no code, no designer needed. One-time payment, lifetime updates.
+        </p>
+
+        {/* CTAs */}
+        <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
           <a href="https://superprofile.bio/vp/shopify-415" target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-lg">
             Buy theme — {formatPrice('2499', '49')}
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
@@ -76,9 +100,17 @@ function Hero() {
             Live preview &nbsp;<span style={{ color: '#ff3333', fontWeight: 700 }}>Shopify store password: "V2"</span>
           </a>
         </div>
-        <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 13.5, marginTop: 18 }}>
-          One-time payment · Lifetime updates · 30-day refund
-        </p>
+
+        {/* Micro trust */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 20, marginTop: 22, flexWrap: 'wrap' }}>
+          {['One-time payment', 'Lifetime updates', '30-day refund'].map((item, i) => (
+            <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: 'rgba(255,255,255,0.45)', fontSize: 13, fontWeight: 500 }}>
+              <svg viewBox="0 0 16 16" width="13" height="13" fill="none"><path d="M3 8l3.5 3.5L13 4.5" stroke="#4ade80" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              {item}
+            </span>
+          ))}
+        </div>
+
       </div>
 
       {/* Text marquee — 2 rows */}
@@ -212,7 +244,7 @@ function AnniversaryOffer() {
                 </span>
               ))}
             </div>
-            <span className="ann-proof-text">28,000+ stores already running this theme</span>
+            <span className="ann-proof-text">100+ stores already running this theme</span>
           </div>
         </div>
 
@@ -259,7 +291,7 @@ function AnniversaryOffer() {
                 </span>
               ))}
             </div>
-            <span className="ann-proof-text">28,000+ stores already running this theme</span>
+            <span className="ann-proof-text">100+ stores already running this theme</span>
           </div>
         </div>
       </div>
@@ -391,6 +423,40 @@ function BoostTraffic() {
   );
 }
 
+/* ─────────────────── One Click Install ─────────────────── */
+function OneClickInstall() {
+  return (
+    <section className="section section-soft" style={{ padding: '64px 0' }}>
+      <div className="wrap" style={{ textAlign: 'center' }}>
+        <div className="section-head" style={{ marginBottom: 36 }}>
+          <span className="eyebrow">Super Easy Setup</span>
+          <h2 className="section-title">Install Your Theme in 1 Click</h2>
+          <p className="lead" style={{ maxWidth: 520, margin: '0 auto' }}>
+            No coding, no complexity. Go from purchase to live store in minutes — just click install and your store is ready.
+          </p>
+        </div>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          borderRadius: 16,
+          overflow: 'hidden',
+          boxShadow: '0 12px 48px rgba(0,0,0,0.13)',
+          maxWidth: 720,
+          margin: '0 auto',
+        }}>
+          <img
+            src="/1click.gif"
+            alt="Install ThemePro V2 in 1 click"
+            style={{ width: '100%', height: 'auto', display: 'block' }}
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ─────────────────── Color Schemes ─────────────────── */
 function ColorSchemes() {
   return (
@@ -407,7 +473,7 @@ function ColorSchemes() {
 /* ─────────────────── Stats ─────────────────── */
 function Stats() {
   const stats = [
-    { num: '28k+',   lbl: 'stores already shipped' },
+    { num: '100+',   lbl: 'stores already shipped' },
     { num: '99/100', lbl: 'PageSpeed performance' },
     { num: '4.95 ★', lbl: 'average review (2.4k)' },
     { num: '$1.2M+', lbl: 'GMV powered by ThemePro V2' },
@@ -430,9 +496,9 @@ function Stats() {
 
 /* ─────────────────── Testimonials ─────────────────── */
 const TESTIMONIALS = [
-  { name: 'Marta Rovira',  role: 'Founder, Lumen Skin',     letter: 'M', quote: 'We migrated from a custom theme in a weekend. Conversion was up 22% in the first two weeks — purely from the speed lift.' },
-  { name: 'Daniel Okafor', role: 'Head of E-comm, Anteo',   letter: 'D', quote: "The shoppable video block alone paid back the license inside a month. Our team finally has a theme that doesn't fight us." },
-  { name: 'Jess Lin',      role: 'Independent Designer',    letter: 'J', quote: "Every section is genuinely well thought through. I haven't touched Liquid in three client builds and the outcomes look bespoke." },
+  { name: 'Priya Nair',       role: 'Founder, Kanmani Jewels',      letter: 'P', quote: 'We went live in one afternoon. Conversions jumped 28% in the first month — the speed alone made the difference.' },
+  { name: 'Karthik Rajan',    role: 'Head of E-comm, Velankanni Co.',letter: 'K', quote: "The shoppable video block paid back the license within weeks. Our team finally has a theme that doesn't fight us." },
+  { name: 'Deepa Subramaniam',role: 'Independent Shopify Designer',  letter: 'D', quote: "Every section is beautifully thought through. I haven't touched Liquid in three client builds and results look bespoke." },
 ];
 
 function Testimonials() {
@@ -441,7 +507,7 @@ function Testimonials() {
       <div className="wrap">
         <div className="section-head">
           <span className="eyebrow">Loved by founders</span>
-          <h2 className="section-title">28,000+ stores running ThemePro V2</h2>
+          <h2 className="section-title">100+ stores running ThemePro V2</h2>
         </div>
         <div className="testi-grid">
           {TESTIMONIALS.map((t) => (
@@ -657,7 +723,7 @@ function MobileStickyBar() {
     { icon: '🔥', text: 'Flash Sale — Only a few spots left!' },
     { icon: '⚡', text: '247 people viewing this right now' },
     { icon: '🚨', text: 'Price goes up when timer hits zero!' },
-    { icon: '✅', text: '28,000+ stores already use this theme' },
+    { icon: '✅', text: '100+ stores already use this theme' },
     { icon: '💸', text: `Save ${formatPrice('24,201', '250')} today only!` },
     { icon: '⏳', text: 'Anniversary offer — grab it before it\'s gone' },
     { icon: '🏆', text: '#1 Rated Shopify theme' },
@@ -778,18 +844,18 @@ function AppReplacement() {
   ];
   
   return (
-    <section className="section" style={{ background: '#0c0d10', color: '#fff' }}>
+    <section className="section" style={{ background: 'linear-gradient(145deg, #0d2b1f 0%, #0a3d2b 50%, #0d2b1f 100%)', color: '#fff' }}>
       <div className="wrap">
         <div className="section-head" style={{ maxWidth: 800 }}>
-          <span className="badge-white" style={{ background: 'rgba(255,255,255,0.1)' }}>Save {formatPrice('1,10,400+', '1,344+')} Per Year</span>
+          <span className="badge-white" style={{ background: 'rgba(38,166,106,0.18)', color: '#4ade80', border: '1px solid rgba(38,166,106,0.3)' }}>Save {formatPrice('1,10,400+', '1,344+')} Per Year</span>
           <h2 className="section-title" style={{ color: '#fff' }}>Stop Paying For Expensive Shopify Apps</h2>
           <p className="lead" style={{ color: 'rgba(255,255,255,0.7)' }}>ThemePro V2 comes with all the premium conversion-boosting features built directly into the core code. No extra monthly fees. No bloated third-party code slowing down your store.</p>
         </div>
-        
-        <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 24, padding: '40px', marginTop: 40, maxWidth: 800, margin: '40px auto 0' }}>
+
+        <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(38,166,106,0.2)', borderRadius: 24, padding: '40px', marginTop: 40, maxWidth: 800, margin: '40px auto 0' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 15 }}>
             {apps.map((app, i) => (
-              <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 15, borderBottom: i !== apps.length - 1 ? '1px solid rgba(255,255,255,0.06)' : 'none' }}>
+              <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 15, borderBottom: i !== apps.length - 1 ? '1px solid rgba(38,166,106,0.15)' : 'none' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                   <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#26a66a" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
                   <span style={{ fontSize: 16, fontWeight: 500 }}>{app.name}</span>
@@ -799,7 +865,7 @@ function AppReplacement() {
             ))}
           </div>
           
-          <div style={{ marginTop: 30, paddingTop: 30, borderTop: '2px dashed rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ marginTop: 30, paddingTop: 30, borderTop: '2px dashed rgba(38,166,106,0.25)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span style={{ fontSize: 20, fontWeight: 600 }}>Total App Savings</span>
             <div style={{ textAlign: 'right' }}>
               <span style={{ fontSize: 28, fontWeight: 800, color: '#26a66a' }}>{formatPrice('9,200/mo', '112/mo')}</span>
@@ -862,7 +928,7 @@ export default function ThemePage() {
       <Head>
         {/* ── Primary SEO ── */}
         <title>ThemePro V2 — Best Shopify Theme for Dropshipping, Fashion & E-commerce</title>
-        <meta name="description" content="ThemePro V2 is the fastest Shopify 2.0 theme for dropshipping, fashion, jewellery & food businesses. One-time payment ₹2499, lifetime updates, 30-day refund. 28,000+ stores trust it." />
+        <meta name="description" content="ThemePro V2 is the fastest Shopify 2.0 theme for dropshipping, fashion, jewellery & food businesses. One-time payment ₹2499, lifetime updates, 30-day refund. 100+ stores trust it." />
         <meta name="keywords" content="shopify theme, best shopify theme, shopify 2.0 theme, dropshipping theme, fashion shopify theme, fast shopify theme, themepro v2" />
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -872,7 +938,7 @@ export default function ThemePage() {
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="ThemePro V2" />
         <meta property="og:title" content="ThemePro V2 — Best Shopify Theme for Dropshipping & E-commerce" />
-        <meta property="og:description" content="The fastest Shopify 2.0 theme on the market. One-time payment ₹2499. Lifetime updates. 28,000+ stores running ThemePro V2." />
+        <meta property="og:description" content="The fastest Shopify 2.0 theme on the market. One-time payment ₹2499. Lifetime updates. 100+ stores running ThemePro V2." />
         <meta property="og:url" content="https://themeprov2.com/shopify-high-converting-professional-theme" />
         <meta property="og:image" content="https://themeprov2.com/og-image.png" />
         <meta property="og:image:width" content="1200" />
@@ -882,7 +948,7 @@ export default function ThemePage() {
         {/* ── Twitter Card ── */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="ThemePro V2 — Best Shopify Theme for E-commerce" />
-        <meta name="twitter:description" content="The fastest Shopify 2.0 theme. One-time payment ₹2499. 28,000+ stores. Lifetime updates." />
+        <meta name="twitter:description" content="The fastest Shopify 2.0 theme. One-time payment ₹2499. 100+ stores. Lifetime updates." />
         <meta name="twitter:image" content="https://themeprov2.com/og-image.png" />
 
         {/* ── Structured Data: Product ── */}
@@ -904,7 +970,7 @@ export default function ThemePage() {
           "aggregateRating": {
             "@type": "AggregateRating",
             "ratingValue": "4.95",
-            "reviewCount": "2400",
+            "reviewCount": "100",
             "bestRating": "5"
           }
         })}} />
@@ -942,6 +1008,7 @@ export default function ThemePage() {
       <Nav />
       <Hero />
       <HookBanner />
+      <OneClickInstall />
       <ProblemAgitation />
       <AnniversaryOffer />
       <Performance />
