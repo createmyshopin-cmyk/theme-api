@@ -1,15 +1,6 @@
 import Head from 'next/head';
 import { useState, useEffect, useRef } from 'react';
 
-/* ─────────────────── Utility ─────────────────── */
-function shade(hex, amt) {
-  const h = hex.replace('#', '');
-  const num = parseInt(h.length === 3 ? h.split('').map((c) => c + c).join('') : h, 16);
-  let r = (num >> 16) & 255, g = (num >> 8) & 255, b = num & 255;
-  const f = (c) => Math.max(0, Math.min(255, Math.round(c + (amt < 0 ? c : 255 - c) * amt)));
-  return '#' + ((1 << 24) + (f(r) << 16) + (f(g) << 8) + f(b)).toString(16).slice(1);
-}
-
 /* ─────────────────── Nav ─────────────────── */
 function Nav() {
   return (
@@ -34,8 +25,8 @@ function Nav() {
           <a href="#faq">FAQ</a>
         </div>
         <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-          <a href="https://superprofile.bio/vp/shopify-415" target="_blank" rel="noopener noreferrer" className="btn btn-dark btn-sm nav-buy-btn">Buy theme · ₹599</a>
-          <a href="https://themeprov2.myshopify.com/password" target="_blank" rel="noopener noreferrer" className="btn btn-dark btn-sm nav-preview-btn">Preview Theme</a>
+          <a href="https://superprofile.bio/vp/shopify-415" target="_blank" rel="noopener noreferrer" className="btn btn-dark btn-sm nav-buy-btn">Buy theme · ₹2499</a>
+          <a href="https://themeprov2.myshopify.com/password" target="_blank" rel="noopener noreferrer" className="btn btn-dark btn-sm nav-preview-btn">Preview Theme &nbsp;<span style={{ color: '#ff3333', fontWeight: 700, display: 'inline' }} className="nav-pw-text">Shopify store password: "V2"</span></a>
         </div>
       </div>
     </nav>
@@ -43,74 +34,10 @@ function Nav() {
 }
 
 /* ─────────────────── Hero ─────────────────── */
-const TILES = [
-  { palette: 'warm',   title: 'Hulton',   sub: 'Perfect Simple' },
-  { palette: 'fresh',  title: 'Stylish',  sub: 'Top Trending' },
-  { palette: 'slate',  title: 'Modern',   sub: 'Edition' },
-  { palette: 'amber',  title: 'Perfect',  sub: "You're Unique" },
-  { palette: 'violet', title: 'Beauty',   sub: 'Routine' },
-  { palette: 'pink',   title: 'Atelier',  sub: "Spring '26" },
-  { palette: 'green',  title: 'Botanic',  sub: 'Skincare' },
-  { palette: 'coral',  title: 'Sneakers', sub: 'Drop 04' },
-];
-const TILES_DBL = [...TILES, ...TILES];
-
-function ThemeTile({ palette, title, sub, flip }) {
-  return (
-    <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', background: '#fff' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 12px', fontSize: 9.5, color: '#5b6270' }}>
-        <span style={{ fontWeight: 800, letterSpacing: '-0.02em', color: '#0c0d10' }}>ThemePro V2</span>
-        <span style={{ display: 'flex', gap: 10 }}><span>Shop</span><span>Page</span><span>Blog</span></span>
-        <span style={{ display: 'flex', gap: 6 }}>
-          <svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" /></svg>
-          <svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="9" cy="20" r="1.4" /><circle cx="17" cy="20" r="1.4" /><path d="M3 4h2l2.5 12h11l2-9H6" /></svg>
-        </span>
-      </div>
-      <div style={{ flex: 1, position: 'relative' }}>
-        <div className={`ph ph-${palette}`} style={{ height: '100%', position: 'relative' }}>
-          <div style={{
-            position: 'absolute',
-            inset: flip ? '14px 14px auto 14px' : 'auto 14px 14px 14px',
-            background: 'rgba(255,255,255,0.92)',
-            color: '#0c0d10',
-            padding: '10px 12px', borderRadius: 8,
-            backdropFilter: 'blur(4px)',
-            maxWidth: '55%',
-          }}>
-            <div style={{ fontWeight: 800, fontSize: 16, letterSpacing: '-0.02em' }}>{title}</div>
-            <div style={{ fontSize: 11, color: '#5b6270' }}>{sub}</div>
-            <div style={{ marginTop: 6, background: '#0c0d10', color: '#fff', borderRadius: 999, padding: '4px 10px', fontSize: 9, fontWeight: 700, display: 'inline-block', letterSpacing: '0.06em' }}>EXPLORE NOW</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function Hero() {
   return (
     <header className="hero">
       <div className="wrap" style={{ textAlign: 'center' }}>
-        {/* Rotating seal */}
-        <div className="seal" aria-hidden="true">
-          <svg className="seal-mark" viewBox="0 0 200 200">
-            <defs><path id="cp" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0" /></defs>
-            <text fontSize="13.5" fontFamily="Plus Jakarta Sans" fontWeight="800" fill="rgba(255,255,255,0.8)" letterSpacing="3">
-              <textPath href="#cp">BUILD · NEXT GENERATION · SHOPIFY 2.0 STORE · BUILD · NEXT GENERATION · SHOPIFY 2.0 STORE · </textPath>
-            </text>
-          </svg>
-          <span className="hex-glyph lg">
-            <svg viewBox="0 0 60 68" width="40" height="46" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinejoin="round">
-              <path d="M22 22 L30 16 L38 22 L38 46 L30 52 L22 46 Z" />
-              <path d="M22 22 L30 28 L38 22" />
-              <path d="M30 28 L30 52" />
-            </svg>
-          </span>
-          <span className="seal-badge">
-            <svg viewBox="0 0 24 24" width="14" height="14" fill="#fff"><path d="M14 2L4 14h7l-2 8 10-12h-7z" /></svg>
-          </span>
-        </div>
-
         <span className="eyebrow-text">The fastest Shopify theme on the market</span>
         <h1 className="hero-headline">
           The Perfect <span className="highlight">Shopify Theme</span><br />
@@ -119,12 +46,12 @@ function Hero() {
 
         <div style={{ display: 'flex', gap: 14, justifyContent: 'center', marginTop: 36, flexWrap: 'wrap' }}>
           <a href="https://superprofile.bio/vp/shopify-415" target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-lg">
-            Buy theme — ₹599
+            Buy theme — ₹2499
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
           </a>
           <a href="https://themeprov2.myshopify.com/password" target="_blank" rel="noopener noreferrer" className="btn btn-ghost-light btn-lg">
             <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
-            Live preview
+            Live preview &nbsp;<span style={{ color: '#ff3333', fontWeight: 700 }}>Shopify store password: "V2"</span>
           </a>
         </div>
         <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 13.5, marginTop: 18 }}>
@@ -132,17 +59,43 @@ function Hero() {
         </p>
       </div>
 
-      {/* Scrolling tile rails */}
-      <div className="hero-grid">
-        <div className="hero-rail">
-          {TILES_DBL.map((t, i) => (
-            <div key={`a${i}`} className="theme-tile"><ThemeTile {...t} /></div>
-          ))}
+      {/* Text marquee — 2 rows */}
+      <div style={{ overflow: 'hidden', width: '100%', margin: '40px 0 10px', display: 'flex', flexDirection: 'column', gap: 14 }}>
+        <style>{`
+          @keyframes marquee-ltr  { 0% { transform: translateX(0); } 100% { transform: translateX(-33.333%); } }
+          @keyframes marquee-rtl  { 0% { transform: translateX(-33.333%); } 100% { transform: translateX(0); } }
+        `}</style>
+
+        {/* Row 1 — left to right */}
+        <div style={{ display: 'flex', whiteSpace: 'nowrap', width: 'max-content', animation: 'marquee-ltr 22s linear infinite', gap: 40 }}>
+          {[...Array(3)].map((_, r) =>
+            ['Dropshipping', 'Fashion', 'Jewellery', 'Food & Beverage', 'Electronics', 'Beauty & Skincare', 'Home Decor', 'Sports & Fitness'].map((label, i) => (
+              <span key={`r1-${r}-${i}`} style={{
+                fontSize: 26, fontWeight: 800, letterSpacing: '-0.02em',
+                color: i % 2 === 0 ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.35)',
+                display: 'inline-flex', alignItems: 'center', gap: 40,
+              }}>
+                {label}
+                <span style={{ width: 7, height: 7, borderRadius: '50%', background: 'rgba(255,255,255,0.35)', display: 'inline-block', flexShrink: 0 }} />
+              </span>
+            ))
+          )}
         </div>
-        <div className="hero-rail reverse">
-          {TILES_DBL.map((t, i) => (
-            <div key={`b${i}`} className="theme-tile"><ThemeTile {...t} flip /></div>
-          ))}
+
+        {/* Row 2 — right to left */}
+        <div style={{ display: 'flex', whiteSpace: 'nowrap', width: 'max-content', animation: 'marquee-rtl 22s linear infinite', gap: 40 }}>
+          {[...Array(3)].map((_, r) =>
+            ['Pet Supplies', 'Toys & Games', 'Health & Wellness', 'Books & Stationery', 'Baby Products', 'Automotive', 'Travel Accessories', 'Organic & Natural'].map((label, i) => (
+              <span key={`r2-${r}-${i}`} style={{
+                fontSize: 26, fontWeight: 800, letterSpacing: '-0.02em',
+                color: i % 2 === 0 ? 'rgba(255,255,255,0.35)' : 'rgba(255,255,255,0.9)',
+                display: 'inline-flex', alignItems: 'center', gap: 40,
+              }}>
+                {label}
+                <span style={{ width: 7, height: 7, borderRadius: '50%', background: 'rgba(255,255,255,0.35)', display: 'inline-block', flexShrink: 0 }} />
+              </span>
+            ))
+          )}
         </div>
       </div>
 
@@ -179,11 +132,11 @@ function HookBanner() {
 
 /* ─────────────────── Anniversary Offer Section ─────────────────── */
 const ANNIV_MSGS = [
-  '🎂 3rd Anniversary Sale — ₹599 only!',
+  '🎂 3rd Anniversary Sale — ₹2499 only!',
   '🔥 Flash Sale — Only a few spots left!',
   '⚡ 247 people viewing this right now',
   '🚨 Price goes up when timer hits zero!',
-  '💸 Save ₹31,401 today only!',
+  '💸 Save ₹24,201 today only!',
   '⏳ Anniversary offer — grab it before it\'s gone',
   '🏆 #1 Rated Shopify theme in India',
   '🎯 Offer valid for today only!',
@@ -225,7 +178,7 @@ function AnniversaryOffer() {
           <h2 className="ann-headline">
             Celebrate With Us —<br />
             Get The Theme at<br />
-            <span className="ann-price-inline">₹599</span>
+            <span className="ann-price-inline">₹2499</span>
           </h2>
           {/* Social proof — desktop shows here */}
           <div className="ann-proof ann-proof-desktop" style={{ display: 'none' }}>
@@ -246,12 +199,12 @@ function AnniversaryOffer() {
           <div className="ann-price-card">
             <div className="ann-price-row">
               <div className="ann-price-block">
-                <span className="ann-now">₹599</span>
-                <span className="ann-mrp">₹32,000</span>
+                <span className="ann-now">₹2499</span>
+                <span className="ann-mrp">₹26,700</span>
               </div>
-              <div className="ann-off-pill">98% OFF</div>
+              <div className="ann-off-pill">91% OFF</div>
             </div>
-            <div className="ann-saved-badge">🎉 You save ₹31,401 today!</div>
+            <div className="ann-saved-badge">🎉 You save ₹24,201 today!</div>
             <div className="ann-price-meta">
               <span className="ann-price-tag">⏱ Limited time</span>
               <span className="ann-price-tag">📅 Today only</span>
@@ -376,21 +329,6 @@ function Performance() {
 }
 
 /* ─────────────────── Features Grid ─────────────────── */
-const FEATURE_CARDS = [
-  { title: 'Cart Upsell Products', emoji: '🛒', color: '#e9ebef' },
-  { title: 'Search Suggest',       emoji: '🔍', color: '#e1f0f7' },
-  { title: 'Vendor Logo',          emoji: '🏷',  color: '#f0f7e1' },
-  { title: 'Product 360°',         emoji: '🔄', color: '#f7e9e1' },
-  { title: 'Bundle Product',       emoji: '📦', color: '#ede1f7' },
-  { title: 'Product Navigation',   emoji: '🗂',  color: '#e1f7f0' },
-  { title: 'Save For Later',       emoji: '❤️',  color: '#f7e1e1' },
-  { title: 'Image Focal Point',    emoji: '🎯', color: '#f7f5e1' },
-  { title: 'Scroll Animation',     emoji: '✨', color: '#e1e9f7' },
-  { title: 'Preload Icon',         emoji: '⚡', color: '#f7eee1' },
-  { title: 'Product Group Option', emoji: '🎨', color: '#ede1f7' },
-  { title: 'Subscription Product', emoji: '🔁', color: '#e1f7e9' },
-];
-
 function FeaturesGrid() {
   return (
     <section className="section section-soft" id="features">
@@ -407,19 +345,6 @@ function FeaturesGrid() {
 }
 
 /* ─────────────────── Boost Traffic ─────────────────── */
-const BOOST_ITEMS = [
-  { title: 'Free Shipping Bar',       desc: 'Motivate your customers to buy more by offering free shipping.',                     emoji: '🚚', bg: '#fff3e6' },
-  { title: 'Promotion Popup',          desc: 'Keep your customers shopping and maximize product awareness.',                        emoji: '🎁', bg: '#fce6e6' },
-  { title: 'Countdown Timer',          desc: 'A great way to promote your business and create urgency.',                           emoji: '⏱', bg: '#f3f2ed' },
-  { title: 'Custom Product Option',    desc: 'Grow sales with sticky add cart, real-time visitor, recently viewed products.',      emoji: '🎛', bg: '#f1f2f5' },
-  { title: 'Live Chat',               desc: 'Speed up your customer service and positively impact your sales.',                   emoji: '💬', bg: '#fcd4d4' },
-  { title: 'Shoppable Images',         desc: 'Add tags to your product images & shorten the purchasing process.',                  emoji: '🏷',  bg: '#fff5e6' },
-  { title: 'Compare Color',            desc: 'Help customers have an overview of all colors to make the right choice.',           emoji: '🎨', bg: '#e6ebe6' },
-  { title: 'Buy Together',             desc: 'Increase your average order value. Decrease your marketing costs.',                  emoji: '🤝', bg: '#e7dfd2' },
-  { title: 'Size Chart',              desc: 'Increases conversions, reduces returns, and improves the consumer experience.',      emoji: '📏', bg: '#e0e9d3' },
-  { title: 'Effective Product Page',  desc: 'Grow sales with sticky add cart, real-time visitor, recently viewed products.',      emoji: '🛍',  bg: '#f0eee9' },
-];
-
 function BoostTraffic() {
   return (
     <section className="section section-white">
@@ -442,15 +367,6 @@ function BoostTraffic() {
 }
 
 /* ─────────────────── Color Schemes ─────────────────── */
-const PALETTES = [
-  { name: 'Forest', primary: '#26a66a', bg: '#2c4a2a' },
-  { name: 'Ocean',  primary: '#2f80ed', bg: '#1c2a47' },
-  { name: 'Sunset', primary: '#ff5b48', bg: '#3b1e1c' },
-  { name: 'Plum',   primary: '#7b5cff', bg: '#3a2358' },
-  { name: 'Mono',   primary: '#0c0d10', bg: '#1c1d22' },
-  { name: 'Honey',  primary: '#f6b733', bg: '#3a2c10' },
-];
-
 function ColorSchemes() {
   return (
     <section className="section" style={{ background: 'linear-gradient(170deg,#d8f0e0,#d6c8ff)', padding: '60px 0' }}>
@@ -482,59 +398,6 @@ function Stats() {
             </div>
           ))}
         </div>
-      </div>
-    </section>
-  );
-}
-
-/* ─────────────────── Pricing ─────────────────── */
-const PLANS = [
-  {
-    tier: 'Starter', price: 49, per: '/ store',
-    blurb: 'For founders launching their first storefront.',
-    features: ['1 Shopify storefront license', 'All 24 demo layouts', '6 months of updates', 'Email support'],
-    cta: 'Get Starter', featured: false,
-  },
-  {
-    tier: 'Studio', price: 89, per: '/ store',
-    blurb: 'Best for serious brands and agencies starting out.',
-    features: ['3 Shopify storefront licenses', 'All 24 demo layouts + premium', 'Lifetime updates & new demos', 'Priority chat support — 24h SLA', 'Migration assistance'],
-    cta: 'Get Studio →', featured: true, ribbon: 'Most Popular',
-  },
-  {
-    tier: 'Agency', price: 249, per: '/ team',
-    blurb: 'Unlimited client builds for agencies and partners.',
-    features: ['Unlimited client licenses', 'Everything in Studio', 'Custom section requests', 'Dedicated Slack channel', 'White-label demos'],
-    cta: 'Talk to sales', featured: false,
-  },
-];
-
-function Pricing() {
-  return (
-    <section className="section section-white" id="pricing">
-      <div className="wrap">
-        <div className="section-head">
-          <span className="eyebrow">Pick your plan</span>
-          <h2 className="section-title">One-time payment.<br />Lifetime everything.</h2>
-          <p className="lead">No subscriptions, no per-store fees. Pay once and ship your storefront today.</p>
-        </div>
-        <div className="pricing-grid">
-          {PLANS.map((plan) => (
-            <div key={plan.tier} className={`price-card${plan.featured ? ' price-card-featured' : ''}`}>
-              {plan.ribbon && <span className="price-ribbon">{plan.ribbon}</span>}
-              <div className="price-tier">{plan.tier}</div>
-              <div className="price-amount"><span className="price-cur">$</span>{plan.price}<span className="price-per">{plan.per}</span></div>
-              <div className="price-blurb">{plan.blurb}</div>
-              <ul className="price-list">
-                {plan.features.map((f) => <li key={f}>{f}</li>)}
-              </ul>
-              <a href="#" className={`btn btn-full${plan.featured ? ' btn-primary' : plan.tier === 'Agency' ? ' btn-dark' : ' btn-ghost'}`}>{plan.cta}</a>
-            </div>
-          ))}
-        </div>
-        <p style={{ textAlign: 'center', marginTop: 28, color: '#5b6270' }}>
-          🔒 Secure checkout · VAT included
-        </p>
       </div>
     </section>
   );
@@ -619,8 +482,8 @@ function FinalCTA() {
         <h2 className="cta-title">Ship the storefront<br />your brand deserves.</h2>
         <p className="cta-sub">One purchase. Every demo. Forever updates. Built for Shopify 2.0.</p>
         <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
-          <a href="https://superprofile.bio/vp/shopify-415" target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-lg">Buy ThemePro V2 — ₹599 →</a>
-          <a href="https://themeprov2.myshopify.com/password" target="_blank" rel="noopener noreferrer" className="btn btn-ghost-light btn-lg">See live demos</a>
+          <a href="https://superprofile.bio/vp/shopify-415" target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-lg">Buy ThemePro V2 — ₹2499 →</a>
+          <a href="https://themeprov2.myshopify.com/password" target="_blank" rel="noopener noreferrer" className="btn btn-ghost-light btn-lg">See live demos &nbsp;<span style={{ color: '#ff3333', fontWeight: 700 }}>Shopify store password: "V2"</span></a>
         </div>
       </div>
     </section>
@@ -763,12 +626,12 @@ function PurchaseToast() {
 const TIMER_START = 9 * 60;
 
 const URGENCY_MSGS = [
-  { icon: '🎂', text: '3rd Anniversary Sale — ₹599 only!' },
+  { icon: '🎂', text: '3rd Anniversary Sale — ₹2499 only!' },
   { icon: '🔥', text: 'Flash Sale — Only a few spots left!' },
   { icon: '⚡', text: '247 people viewing this right now' },
   { icon: '🚨', text: 'Price goes up when timer hits zero!' },
   { icon: '✅', text: '28,000+ stores already use this theme' },
-  { icon: '💸', text: 'Save ₹31,401 today only!' },
+  { icon: '💸', text: 'Save ₹24,201 today only!' },
   { icon: '⏳', text: 'Anniversary offer — grab it before it\'s gone' },
   { icon: '🏆', text: '#1 Rated Shopify theme in India' },
 ];
@@ -824,9 +687,9 @@ function MobileStickyBar() {
             🎂 3rd Anniversary Offer
           </div>
           <div className="msb-price-row">
-            <span className="msb-now">₹599</span>
-            <span className="msb-mrp">₹32,000</span>
-            <span className="msb-badge">98% OFF</span>
+            <span className="msb-now">₹2499</span>
+            <span className="msb-mrp">₹26,700</span>
+            <span className="msb-badge">91% OFF</span>
           </div>
           <div className="msb-sublabel">Limited time · Today only</div>
         </div>
@@ -864,7 +727,7 @@ export default function ThemePage() {
       <BoostTraffic />
       <ColorSchemes />
       <Stats />
-      {/* <Pricing /> */}
+
       <Testimonials />
       <FAQ />
       <FinalCTA />

@@ -124,6 +124,7 @@ h2.section-title { font-size: clamp(36px,4vw,60px); margin: 18px 0 14px; }
 @media (max-width:880px) {
   .nav-buy-btn { display: none; }
   .nav-preview-btn { display: inline-flex; }
+  .nav-pw-text { display: none !important; }
 }
 
 /* Hero */
