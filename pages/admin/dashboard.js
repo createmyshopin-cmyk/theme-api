@@ -158,6 +158,7 @@ export default function Dashboard() {
       l.phone?.includes(search) ||
       l.license_code?.includes(search) ||
       l.shop_domain?.includes(search) ||
+      l.store_name?.toLowerCase().includes(search.toLowerCase()) ||
       l.theme_name?.toLowerCase().includes(search.toLowerCase())
     const matchStatus =
       statusFilter === 'all' ||
@@ -374,6 +375,11 @@ export default function Dashboard() {
                             <span style={s.codeChip} onClick={() => copyCode(lic.license_code)}>{lic.license_code}</span>
                             {lic.theme_name && <span style={s.mobileNotes}>{lic.theme_name}</span>}
                           </div>
+                          {lic.store_name && (
+                            <div style={s.mobileDomain}>
+                              <span style={s.storeNameChip}>🏪 {lic.store_name}</span>
+                            </div>
+                          )}
                           {lic.shop_domain && (
                             <div style={s.mobileDomain}>
                               <a href={`https://${lic.shop_domain}`} target="_blank" rel="noopener" style={s.domainLink}>
@@ -401,7 +407,7 @@ export default function Dashboard() {
                       <table style={s.table}>
                         <thead>
                           <tr>
-                            {['Phone', 'Code', 'Theme Name', 'Shop Domain', 'Status', 'Created', 'Activated', 'Actions'].map(h => (
+                            {['Phone', 'Code', 'Theme Name', 'Store Name', 'Shop Domain', 'Status', 'Created', 'Activated', 'Actions'].map(h => (
                               <th key={h} style={s.th}>{h}</th>
                             ))}
                           </tr>
@@ -417,6 +423,11 @@ export default function Dashboard() {
                               </td>
                               <td style={{ ...s.td, maxWidth: 160 }}>
                                 <span style={s.notesText}>{lic.theme_name || <span style={s.muted}>—</span>}</span>
+                              </td>
+                              <td style={{ ...s.td, maxWidth: 160 }}>
+                                {lic.store_name
+                                  ? <span style={s.storeNameChip}>🏪 {lic.store_name}</span>
+                                  : <span style={s.muted}>—</span>}
                               </td>
                               <td style={{ ...s.td, maxWidth: 180 }}>
                                 {lic.shop_domain
@@ -794,6 +805,13 @@ const s = {
     fontSize:12, display:'block',
     overflow:'hidden', textOverflow:'ellipsis',
     whiteSpace:'nowrap', maxWidth:180,
+  },
+  storeNameChip: {
+    display:'inline-flex', alignItems:'center', gap:4,
+    background:'#f0f9ff', border:'1px solid #bae6fd',
+    borderRadius:6, padding:'2px 8px',
+    fontSize:12, fontWeight:600, color:'#0369a1',
+    maxWidth:150, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap',
   },
   badge: {
     padding:'4px 10px', borderRadius:20,

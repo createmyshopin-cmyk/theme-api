@@ -1,5 +1,19 @@
 import { query } from '../../lib/db'
 
+async function fetchStoreName(shopDomain) {
+  try {
+    const r = await fetch(`https://${shopDomain}/meta.json`, {
+      headers: { 'Accept': 'application/json' },
+      signal: AbortSignal.timeout(4000),
+    })
+    if (!r.ok) return null
+    const data = await r.json()
+    return data?.name || null
+  } catch {
+    return null
+  }
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end()
 
@@ -32,9 +46,12 @@ export default async function handler(req, res) {
 
   const ip = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || null
 
+  // Fetch store name from Shopify public meta endpoint
+  const storeName = await fetchStoreName(shop_domain)
+
   await query(
-    `UPDATE licenses SET is_active = 1, shop_domain = ?, activated_at = NOW() WHERE id = ?`,
-    [shop_domain, license.id]
+    `UPDATE licenses SET is_active = 1, shop_domain = ?, store_name = ?, activated_at = NOW() WHERE id = ?`,
+    [shop_domain, storeName, license.id]
   )
 
   await query(

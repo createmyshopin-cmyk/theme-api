@@ -20,12 +20,18 @@ async function init() {
       phone         VARCHAR(20)  NOT NULL UNIQUE,
       license_code  CHAR(6)      NOT NULL UNIQUE,
       shop_domain   VARCHAR(255) DEFAULT NULL,
+      store_name    VARCHAR(255) DEFAULT NULL,
       activated_at  DATETIME     DEFAULT NULL,
       is_active     TINYINT(1)   NOT NULL DEFAULT 0,
       created_at    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
       notes         TEXT         DEFAULT NULL
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
   `)
+
+  // Add store_name column to existing tables (safe — IF NOT EXISTS equivalent)
+  await conn.execute(`
+    ALTER TABLE licenses ADD COLUMN IF NOT EXISTS store_name VARCHAR(255) DEFAULT NULL AFTER shop_domain
+  `).catch(() => {})
   console.log('Table `licenses` ready')
 
   await conn.execute(`
