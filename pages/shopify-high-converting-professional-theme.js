@@ -57,7 +57,7 @@ function Hero() {
     <header className="hero">
       <div className="wrap" style={{ textAlign: 'center' }}>
         <div style={{ display: 'flex', justifyContent: 'center', margin: '0 0 10px' }}>
-          <img src="/shopify-part-white.png" alt="Shopify" style={{ width: '40%', maxWidth: 180, height: 'auto', opacity: 0.95 }} />
+          <img src="/shopify-part-white.png" alt="Shopify Partners" width="180" height="48" fetchPriority="high" style={{ width: '40%', maxWidth: 180, height: 'auto', opacity: 0.95 }} />
         </div>
 
         <span className="eyebrow-text">The fastest Shopify theme on the market</span>
@@ -360,7 +360,7 @@ function FeaturesGrid() {
           <h2 className="section-title">ThemePro V2 Features</h2>
         </div>
         <div className="boost-img-wrap">
-          <img src="/new.png" alt="The list of great features" className="boost-img" />
+          <img src="/new.png" alt="The list of great features" className="boost-img" loading="lazy" decoding="async" />
         </div>
       </div>
     </section>
@@ -382,6 +382,8 @@ function BoostTraffic() {
             src="/boost.png"
             alt="Boost Traffic Features"
             className="boost-img"
+            loading="lazy"
+            decoding="async"
           />
         </div>
       </div>
@@ -395,7 +397,7 @@ function ColorSchemes() {
     <section className="section" style={{ background: 'linear-gradient(170deg,#d8f0e0,#d6c8ff)', padding: '60px 0' }}>
       <div className="wrap">
         <div className="boost-img-wrap">
-          <img src="/color.gif" alt="Color Schemes Feature" className="boost-img" />
+          <img src="/color.gif" alt="Color Schemes Feature" className="boost-img" loading="lazy" decoding="async" />
         </div>
       </div>
     </section>
@@ -858,14 +860,84 @@ export default function ThemePage() {
   return (
     <CurrencyContext.Provider value={{ currency, setCurrency, formatPrice }}>
       <Head>
-        <title>ThemePro V2 — The Perfect Shopify Theme For Your Business</title>
-        <meta name="description" content="The fastest Shopify 2.0 theme on the market. One-time payment, lifetime updates, 30-day refund. Built for speed, polished for taste, tuned for conversion." />
-        <meta property="og:title" content="ThemePro V2 Shopify Theme" />
-        <meta property="og:description" content="The fastest Shopify 2.0 theme on the market." />
+        {/* ── Primary SEO ── */}
+        <title>ThemePro V2 — Best Shopify Theme for Dropshipping, Fashion & E-commerce</title>
+        <meta name="description" content="ThemePro V2 is the fastest Shopify 2.0 theme for dropshipping, fashion, jewellery & food businesses. One-time payment ₹2499, lifetime updates, 30-day refund. 28,000+ stores trust it." />
+        <meta name="keywords" content="shopify theme, best shopify theme, shopify 2.0 theme, dropshipping theme, fashion shopify theme, fast shopify theme, themepro v2" />
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="canonical" href="https://themeprov2.com/shopify-high-converting-professional-theme" />
+
+        {/* ── Open Graph ── */}
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="ThemePro V2" />
+        <meta property="og:title" content="ThemePro V2 — Best Shopify Theme for Dropshipping & E-commerce" />
+        <meta property="og:description" content="The fastest Shopify 2.0 theme on the market. One-time payment ₹2499. Lifetime updates. 28,000+ stores running ThemePro V2." />
+        <meta property="og:url" content="https://themeprov2.com/shopify-high-converting-professional-theme" />
+        <meta property="og:image" content="https://themeprov2.com/og-image.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:locale" content="en_IN" />
+
+        {/* ── Twitter Card ── */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="ThemePro V2 — Best Shopify Theme for E-commerce" />
+        <meta name="twitter:description" content="The fastest Shopify 2.0 theme. One-time payment ₹2499. 28,000+ stores. Lifetime updates." />
+        <meta name="twitter:image" content="https://themeprov2.com/og-image.png" />
+
+        {/* ── Structured Data: Product ── */}
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Product",
+          "name": "ThemePro V2 Shopify Theme",
+          "description": "The fastest Shopify 2.0 theme for dropshipping, fashion, jewellery and e-commerce. One-time payment, lifetime updates.",
+          "image": "https://themeprov2.com/og-image.png",
+          "brand": { "@type": "Brand", "name": "ThemePro V2" },
+          "offers": {
+            "@type": "Offer",
+            "price": "2499",
+            "priceCurrency": "INR",
+            "availability": "https://schema.org/InStock",
+            "url": "https://superprofile.bio/vp/shopify-415",
+            "priceValidUntil": "2026-12-31"
+          },
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.95",
+            "reviewCount": "2400",
+            "bestRating": "5"
+          }
+        })}} />
+
+        {/* ── Structured Data: FAQPage ── */}
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          "mainEntity": [
+            { "@type": "Question", "name": "How does the one-time license work?", "acceptedAnswer": { "@type": "Answer", "text": "Buy once, install on your store, and use it forever. You'll receive every future update and new demo at no extra cost." } },
+            { "@type": "Question", "name": "Will it slow down my store?", "acceptedAnswer": { "@type": "Answer", "text": "ThemePro V2 consistently scores 95–100 on PageSpeed Insights with content-rich storefronts." } },
+            { "@type": "Question", "name": "Do I need a developer to install it?", "acceptedAnswer": { "@type": "Answer", "text": "No. Every section is configurable through Shopify's theme editor. Most merchants are live within an afternoon." } },
+            { "@type": "Question", "name": "What if it's not for me?", "acceptedAnswer": { "@type": "Answer", "text": "We offer a no-questions 30-day refund. Email us within 30 days of purchase." } }
+          ]
+        })}} />
+
+        {/* ── Structured Data: Organization ── */}
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "name": "ThemePro V2",
+          "url": "https://themeprov2.com",
+          "logo": "https://themeprov2.com/logo.png",
+          "sameAs": []
+        })}} />
+
+        {/* ── Performance: Font preconnect & optimized load ── */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+
+        {/* ── Performance: Preload critical image ── */}
+        <link rel="preload" href="/shopify-part-white.png" as="image" />
       </Head>
       <Nav />
       <Hero />
