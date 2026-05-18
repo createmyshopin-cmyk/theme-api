@@ -24,10 +24,13 @@ export default async function handler(req, res) {
   }
 
   const normalized = phone.replace(/[^\d+]/g, '')
+  // Strip leading + and country codes so +919947653215 matches 9947653215
+  const digitsOnly = normalized.replace(/^\+/, '')
 
   const rows = await query(
-    'SELECT * FROM licenses WHERE phone = ? AND license_code = ?',
-    [normalized, license_code]
+    `SELECT * FROM licenses WHERE license_code = ?
+     AND (phone = ? OR phone = ? OR REPLACE(REPLACE(phone,'+',''),' ','') = ?)`,
+    [license_code, normalized, digitsOnly, digitsOnly]
   )
 
   if (rows.length === 0) {
