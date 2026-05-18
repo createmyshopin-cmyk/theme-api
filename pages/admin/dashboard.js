@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 
@@ -62,6 +62,10 @@ export default function Dashboard() {
   const [logsLoading, setLogsLoading]   = useState(false)
   const [popupLive, setPopupLive]       = useState(false)
   const [toggleSaving, setToggleSaving] = useState(false)
+  const [notifications, setNotifications] = useState([])
+  const knownLicenseIds   = useRef(null)
+  const knownRegPhones    = useRef(null)
+  const notifIdCounter    = useRef(0)
 
   useEffect(() => {
     const t = localStorage.getItem('triara_admin_token')
@@ -89,7 +93,7 @@ export default function Dashboard() {
     }
   }, [token])
 
-  useEffect(() => { fetchLicenses() }, [fetchLicenses])
+  // Initial load handled by pollLicenses on token set
 
   const fetchRegistrations = useCallback(async () => {
     if (!token) return
@@ -123,6 +127,132 @@ export default function Dashboard() {
     setToast({ msg, type })
     setTimeout(() => setToast(null), 3500)
   }
+
+  function playAlarm(type) {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)()
+      const play = (freq, start, dur, vol = 0.4) => {
+        const osc  = ctx.createOscillator()
+        const gain = ctx.createGain()
+        osc.connect(gain); gain.connect(ctx.destination)
+        osc.type = 'sine'
+        osc.frequency.setValueAtTime(freq, ctx.currentTime + start)
+        gain.gain.setValueAtTime(0, ctx.currentTime + start)
+        gain.gain.linearRampToValueAtTime(vol, ctx.currentTime + start + 0.01)
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + start + dur)
+        osc.start(ctx.currentTime + start)
+        osc.stop(ctx.currentTime + start + dur)
+      }
+      if (type === 'activation') {
+        // Upbeat success chime: C5 → E5 → G5
+        play(523, 0,    0.18, 0.35)
+        play(659, 0.16, 0.18, 0.35)
+        play(784, 0.32, 0.30, 0.4)
+        play(1046,0.52, 0.35, 0.3)
+      } else {
+        // New visitor: two gentle pings
+        play(880, 0,    0.15, 0.28)
+        play(1100,0.20, 0.15, 0.25)
+      }
+    } catch {}
+  }
+
+  function addNotif(type, title, subtitle, color) {
+    const id = ++notifIdCounter.current
+    setNotifications(prev => [{ id, type, title, subtitle, color, ts: Date.now() }, ...prev.slice(0, 4)])
+    setTimeout(() => setNotifications(prev => prev.filter(n => n.id !== id)), 8000)
+    playAlarm(type)
+  }
+
+  function dismissNotif(id) {
+    setNotifications(prev => prev.filter(n => n.id !== id))
+  }
+
+  const pollLicenses = useCallback(async () => {
+    if (!token) return
+    try {
+      const res  = await fetch('/api/admin/licenses', { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' } })
+      if (!res.ok) return
+      const data = await res.json()
+      if (!Array.isArray(data)) return
+
+      const currentIds    = new Set(data.map(l => l.id))
+      const activatedOnes = data.filter(l => l.is_active)
+
+      // First run — just seed, don't alert
+      if (knownLicenseIds.current === null) {
+        knownLicenseIds.current = new Set(data.map(l => `${l.id}:${l.is_active ? 1 : 0}`))
+        setLicenses(data)
+        return
+      }
+
+      // Detect newly activated licenses
+      data.forEach(l => {
+        const prevKey     = `${l.id}:0`
+        const activeKey   = `${l.id}:1`
+        const wasInactive = knownLicenseIds.current.has(prevKey)
+        const isNowActive = l.is_active
+        if (wasInactive && isNowActive) {
+          addNotif('activation',
+            '🎉 License Activated!',
+            `${l.store_name || l.shop_domain || l.phone} activated a license`,
+            '#10b981'
+          )
+        }
+        // Detect brand new licenses
+        const isNew = !knownLicenseIds.current.has(prevKey) && !knownLicenseIds.current.has(activeKey)
+        if (isNew) {
+          addNotif('activation',
+            '🔑 New License Created',
+            `${l.store_name || l.shop_domain || l.phone}`,
+            '#6366f1'
+          )
+        }
+      })
+
+      knownLicenseIds.current = new Set(data.map(l => `${l.id}:${l.is_active ? 1 : 0}`))
+      setLicenses(data)
+    } catch {}
+  }, [token])
+
+  const pollRegistrations = useCallback(async () => {
+    if (!token) return
+    try {
+      const res  = await fetch('/api/admin/registrations', { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' } })
+      if (!res.ok) return
+      const data = await res.json()
+      if (!Array.isArray(data)) return
+
+      if (knownRegPhones.current === null) {
+        knownRegPhones.current = new Set(data.map(r => r.phone || r.whatsapp))
+        return
+      }
+
+      data.forEach(r => {
+        const key = r.phone || r.whatsapp
+        if (!knownRegPhones.current.has(key)) {
+          addNotif('visitor',
+            '📱 New Store Registered',
+            `${key} just registered`,
+            '#f59e0b'
+          )
+        }
+      })
+
+      knownRegPhones.current = new Set(data.map(r => r.phone || r.whatsapp))
+    } catch {}
+  }, [token])
+
+  useEffect(() => {
+    if (!token) return
+    pollLicenses()
+    pollRegistrations()
+    const iv = setInterval(() => {
+      pollLicenses()
+      pollRegistrations()
+    }, 15000)
+    return () => clearInterval(iv)
+  }, [token, pollLicenses, pollRegistrations])
 
   function handleLogout() {
     localStorage.removeItem('triara_admin_token')
@@ -1111,11 +1241,49 @@ export default function Dashboard() {
         </div>
       )}
 
+      {/* Live Notification Stack */}
+      <div style={{ position:'fixed', bottom:24, right:24, zIndex:999999, display:'flex', flexDirection:'column', gap:10, alignItems:'flex-end', pointerEvents:'none' }}>
+        {notifications.map((n, idx) => (
+          <div key={n.id} style={{
+            background:'#0f172a',
+            border:`1.5px solid ${n.color}44`,
+            borderLeft:`4px solid ${n.color}`,
+            borderRadius:14,
+            padding:'14px 16px',
+            minWidth:280, maxWidth:340,
+            boxShadow:`0 8px 32px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.04)`,
+            display:'flex', alignItems:'flex-start', gap:12,
+            animation:'notif-in 0.35s cubic-bezier(0.34,1.56,0.64,1)',
+            pointerEvents:'all',
+            opacity: 1,
+          }}>
+            <div style={{
+              width:36, height:36, borderRadius:10, flexShrink:0,
+              background:`${n.color}22`, display:'flex', alignItems:'center', justifyContent:'center',
+              fontSize:18
+            }}>
+              {n.type === 'activation' ? (n.title.includes('🎉') ? '🎉' : '🔑') : '📱'}
+            </div>
+            <div style={{ flex:1, minWidth:0 }}>
+              <div style={{ fontSize:13, fontWeight:700, color:'#fff', marginBottom:2, lineHeight:1.3 }}>{n.title}</div>
+              <div style={{ fontSize:12, color:'rgba(255,255,255,0.5)', lineHeight:1.4, wordBreak:'break-word' }}>{n.subtitle}</div>
+              <div style={{ fontSize:11, color:'rgba(255,255,255,0.25)', marginTop:4 }}>just now</div>
+            </div>
+            <button onClick={() => dismissNotif(n.id)} style={{
+              background:'none', border:'none', color:'rgba(255,255,255,0.35)', cursor:'pointer',
+              fontSize:16, lineHeight:1, padding:'2px 4px', flexShrink:0, marginTop:-2,
+              transition:'color 0.15s'
+            }}>✕</button>
+          </div>
+        ))}
+      </div>
+
       <style>{`
         * { box-sizing: border-box; }
         body { margin: 0; }
         @keyframes spin { to { transform: rotate(360deg); } }
         @keyframes pop { from { transform: scale(0.85); opacity:0; } to { transform: scale(1); opacity:1; } }
+        @keyframes notif-in { from { transform: translateX(60px) scale(0.92); opacity:0; } to { transform: translateX(0) scale(1); opacity:1; } }
         @media (min-width: 769px) {
           #cms-sidebar { transform: translateX(0) !important; }
           #cms-main    { margin-left: 240px !important; }
