@@ -40,11 +40,27 @@ async function init() {
       whatsapp      VARCHAR(20)  NOT NULL,
       shop_domain   VARCHAR(255) NOT NULL,
       code          CHAR(6)      NOT NULL,
+      activated     TINYINT(1)   NOT NULL DEFAULT 0,
+      activated_at  DATETIME     DEFAULT NULL,
       created_at    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
       UNIQUE KEY uq_shop_wa (shop_domain, whatsapp)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
   `)
+  // Safe migrations for existing table
+  await conn.execute(`ALTER TABLE whatsapp_registrations ADD COLUMN IF NOT EXISTS activated TINYINT(1) NOT NULL DEFAULT 0`).catch(()=>{})
+  await conn.execute(`ALTER TABLE whatsapp_registrations ADD COLUMN IF NOT EXISTS activated_at DATETIME DEFAULT NULL`).catch(()=>{})
   console.log('Table `whatsapp_registrations` ready')
+
+  await conn.execute(`
+    CREATE TABLE IF NOT EXISTS theme_updates (
+      id          INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+      title       VARCHAR(255) NOT NULL,
+      message     TEXT         NOT NULL,
+      is_active   TINYINT(1)   NOT NULL DEFAULT 1,
+      created_at  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `)
+  console.log('Table `theme_updates` ready')
 
   await conn.execute(`
     CREATE TABLE IF NOT EXISTS activation_log (

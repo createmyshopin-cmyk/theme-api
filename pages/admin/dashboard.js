@@ -3,10 +3,12 @@ import { useRouter } from 'next/router'
 import Head from 'next/head'
 
 const NAV = [
-  { id: 'licenses',      label: 'All Licenses',   icon: '🔑' },
-  { id: 'pending',       label: 'Pending',         icon: '⏳' },
-  { id: 'registrations', label: 'Registrations',   icon: '📱' },
-  { id: 'generate',      label: 'Generate',        icon: '✨' },
+  { id: 'licenses',      label: 'All Licenses',       icon: '🔑' },
+  { id: 'pending',       label: 'Pending',             icon: '⏳' },
+  { id: 'registrations', label: 'Registrations',       icon: '📱' },
+  { id: 'activated',     label: 'Activated Customers', icon: '✅' },
+  { id: 'updates',       label: 'Push Updates',        icon: '📢' },
+  { id: 'generate',      label: 'Generate',            icon: '✨' },
 ]
 
 export default function Dashboard() {
@@ -30,6 +32,10 @@ export default function Dashboard() {
   const [pinLoading, setPinLoading] = useState(false)
   const [registrations, setRegistrations] = useState([])
   const [regLoading, setRegLoading] = useState(false)
+  const [updateTitle, setUpdateTitle] = useState('')
+  const [updateMsg, setUpdateMsg]     = useState('')
+  const [updateSaving, setUpdateSaving] = useState(false)
+  const [updateResult, setUpdateResult] = useState(null)
 
   useEffect(() => {
     const t = localStorage.getItem('triara_admin_token')
@@ -192,6 +198,9 @@ export default function Dashboard() {
 
   const isTable = activeNav === 'licenses' || activeNav === 'pending'
   const isRegistrations = activeNav === 'registrations'
+  const isActivated = activeNav === 'activated'
+  const isUpdates = activeNav === 'updates'
+  const activatedList = licenses.filter(l => l.is_active)
 
   return (
     <>
@@ -271,12 +280,16 @@ export default function Dashboard() {
                   {activeNav === 'licenses'      ? 'All Licenses'
                    : activeNav === 'pending'     ? 'Pending Licenses'
                    : activeNav === 'registrations' ? 'WhatsApp Registrations'
+                   : activeNav === 'activated'   ? 'Activated Customers'
+                   : activeNav === 'updates'     ? 'Push Updates'
                    : 'Generate License'}
                 </h1>
                 <p style={s.pageSub}>
                   {activeNav === 'licenses'      && `${stats.total} total · ${stats.active} active`}
                   {activeNav === 'pending'        && `${stats.inactive} not yet activated`}
                   {activeNav === 'registrations'  && `${registrations.length} registered`}
+                  {activeNav === 'activated'      && `${stats.active} active stores`}
+                  {activeNav === 'updates'        && 'Send update popup to all activated stores'}
                   {activeNav === 'generate'       && 'Create a new license key'}
                 </p>
               </div>
@@ -389,6 +402,122 @@ export default function Dashboard() {
                     </div>
                   </>
                 )}
+              </div>
+            )}
+
+            {/* Activated Customers */}
+            {isActivated && (
+              <div style={s.tableCard}>
+                {activatedList.length === 0 ? (
+                  <div style={s.centerMsg}>
+                    <div style={{fontSize:40,marginBottom:12}}>🏪</div>
+                    <p style={s.mutedText}>No activated customers yet.</p>
+                  </div>
+                ) : (
+                  <>
+                    <div id="cms-mobile-cards" style={s.mobileCards}>
+                      {activatedList.map(lic => (
+                        <div key={lic.id} style={s.mobileCard}>
+                          <div style={s.mobileCardRow}>
+                            <span style={s.mobilePhone}>{lic.phone}</span>
+                            <span style={{...s.badge,...s.badgeActive}}>● Active</span>
+                          </div>
+                          {lic.store_name && <div style={s.mobileDomain}><span style={s.storeNameChip}>🏪 {lic.store_name}</span></div>}
+                          {lic.shop_domain && <div style={s.mobileDomain}><a href={`https://${lic.shop_domain}`} target="_blank" rel="noopener" style={s.domainLink}>{lic.shop_domain}</a></div>}
+                          <div style={s.mobileDate}>Activated: {lic.activated_at ? new Date(lic.activated_at).toLocaleDateString('en-IN') : '—'}</div>
+                        </div>
+                      ))}
+                    </div>
+                    <div id="cms-desktop-table" style={s.tableWrap}>
+                      <table style={s.table}>
+                        <thead>
+                          <tr>{['WhatsApp / Phone','Store Name','Shop Domain','Activated Date'].map(h=>(
+                            <th key={h} style={s.th}>{h}</th>
+                          ))}</tr>
+                        </thead>
+                        <tbody>
+                          {activatedList.map((lic,idx)=>(
+                            <tr key={lic.id} style={{...s.tr, background: idx%2===0?'#fff':'#f8fafc'}}>
+                              <td style={s.td}><span style={s.phone}>{lic.phone}</span></td>
+                              <td style={s.td}>
+                                {lic.store_name
+                                  ? <span style={s.storeNameChip}>🏪 {lic.store_name}</span>
+                                  : <span style={s.muted}>—</span>}
+                              </td>
+                              <td style={s.td}>
+                                {lic.shop_domain
+                                  ? <a href={`https://${lic.shop_domain}`} target="_blank" rel="noopener" style={s.domainLink}>{lic.shop_domain}</a>
+                                  : <span style={s.muted}>—</span>}
+                              </td>
+                              <td style={s.td}>
+                                <span style={s.dateText}>
+                                  {lic.activated_at ? new Date(lic.activated_at).toLocaleString('en-IN') : <span style={s.muted}>—</span>}
+                                </span>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
+
+            {/* Push Updates */}
+            {isUpdates && (
+              <div style={s.generateWrap}>
+                <div style={s.generateCard}>
+                  <h2 style={s.cardTitle}>📢 Send Update Popup</h2>
+                  <p style={{fontSize:13,color:'#64748b',marginBottom:20,lineHeight:1.6}}>
+                    This popup will show <strong>only in the Shopify theme customisation editor</strong> for all activated stores. Use it to announce new features, sections, or updates.
+                  </p>
+                  <div style={s.field}>
+                    <label style={s.label}>Update Title *</label>
+                    <input style={s.input} type="text" placeholder="e.g. 🎉 New Feature: Shoppable Video Block"
+                      value={updateTitle} onChange={e => setUpdateTitle(e.target.value)} />
+                  </div>
+                  <div style={s.field}>
+                    <label style={s.label}>Message *</label>
+                    <textarea style={{...s.input, height:100, resize:'vertical'}}
+                      placeholder="Describe the update in detail…"
+                      value={updateMsg} onChange={e => setUpdateMsg(e.target.value)} />
+                  </div>
+                  {updateResult && (
+                    <div style={{padding:'10px 14px',borderRadius:10,marginBottom:16,
+                      background: updateResult.ok ? '#f0fdf4' : '#fef2f2',
+                      border: `1.5px solid ${updateResult.ok ? '#bbf7d0' : '#fecaca'}`,
+                      color: updateResult.ok ? '#15803d' : '#dc2626', fontSize:13, fontWeight:600}}>
+                      {updateResult.msg}
+                    </div>
+                  )}
+                  <div style={{display:'flex',gap:10}}>
+                    <button style={{...s.primaryBtn, opacity: updateSaving?0.7:1, flex:1}}
+                      disabled={updateSaving}
+                      onClick={async () => {
+                        if (!updateTitle || !updateMsg) { setUpdateResult({ok:false,msg:'Title and message required'}); return }
+                        setUpdateSaving(true); setUpdateResult(null)
+                        try {
+                          const r = await fetch('/api/admin/updates', {
+                            method:'POST', headers: authHeaders(),
+                            body: JSON.stringify({title:updateTitle, message:updateMsg})
+                          })
+                          if (r.ok) { setUpdateResult({ok:true,msg:'✅ Update published to all activated stores!'}); setUpdateTitle(''); setUpdateMsg('') }
+                          else setUpdateResult({ok:false,msg:'Failed to publish update.'})
+                        } catch { setUpdateResult({ok:false,msg:'Network error.'}) }
+                        finally { setUpdateSaving(false) }
+                      }}>
+                      {updateSaving ? 'Publishing…' : '📢 Publish Update'}
+                    </button>
+                    <button style={{...s.primaryBtn, background:'#ef4444', boxShadow:'none', flex:'0 0 auto', padding:'12px 20px'}}
+                      onClick={async () => {
+                        await fetch('/api/admin/updates', {method:'DELETE', headers: authHeaders()})
+                        setUpdateResult({ok:true, msg:'Update cleared — popup hidden from stores.'})
+                      }}>
+                      Clear
+                    </button>
+                  </div>
+                </div>
               </div>
             )}
 
