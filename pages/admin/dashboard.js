@@ -39,6 +39,8 @@ export default function Dashboard() {
   const [updateResult, setUpdateResult] = useState(null)
   const [updateLogs, setUpdateLogs]     = useState([])
   const [logsLoading, setLogsLoading]   = useState(false)
+  const [popupLive, setPopupLive]       = useState(false)
+  const [toggleSaving, setToggleSaving] = useState(false)
 
   useEffect(() => {
     const t = localStorage.getItem('triara_admin_token')
@@ -87,7 +89,9 @@ export default function Dashboard() {
     try {
       const res = await fetch('/api/admin/updates', { headers: authHeaders() })
       const data = await res.json()
-      setUpdateLogs(Array.isArray(data) ? data : [])
+      const logs = Array.isArray(data) ? data : []
+      setUpdateLogs(logs)
+      setPopupLive(logs.some(l => l.is_active))
     } catch {}
     finally { setLogsLoading(false) }
   }, [token])
@@ -505,49 +509,132 @@ export default function Dashboard() {
 
             {/* Push Updates */}
             {isUpdates && (
-              <div style={{display:'flex', flexDirection:'column', gap:20}}>
+              <div style={{display:'flex', flexDirection:'column', gap:20, maxWidth:780}}>
+
+                {/* Live status banner */}
+                <div style={{
+                  display:'flex', alignItems:'center', justifyContent:'space-between',
+                  background: popupLive ? 'linear-gradient(135deg,#f0fdf4,#dcfce7)' : 'linear-gradient(135deg,#f8fafc,#f1f5f9)',
+                  border: `1.5px solid ${popupLive ? '#86efac' : '#e2e8f0'}`,
+                  borderRadius:18, padding:'18px 22px', gap:16,
+                }}>
+                  <div style={{display:'flex', alignItems:'center', gap:12}}>
+                    <div style={{
+                      width:44, height:44, borderRadius:14, flexShrink:0,
+                      background: popupLive ? '#22c55e' : '#cbd5e1',
+                      display:'flex', alignItems:'center', justifyContent:'center',
+                      fontSize:20, boxShadow: popupLive ? '0 4px 14px rgba(34,197,94,0.35)' : 'none',
+                      transition:'all 0.3s',
+                    }}>
+                      {popupLive ? '📡' : '📴'}
+                    </div>
+                    <div>
+                      <div style={{fontWeight:700, fontSize:15, color: popupLive ? '#15803d' : '#475569'}}>
+                        Popup is {popupLive ? 'LIVE' : 'Hidden'}
+                      </div>
+                      <div style={{fontSize:12, color: popupLive ? '#16a34a' : '#94a3b8', marginTop:2}}>
+                        {popupLive ? 'Showing to all merchants in their theme editor' : 'Not showing to any store right now'}
+                      </div>
+                    </div>
+                  </div>
+                  {/* Toggle switch */}
+                  <button
+                    disabled={toggleSaving}
+                    onClick={async () => {
+                      setToggleSaving(true)
+                      try {
+                        if (popupLive) {
+                          await fetch('/api/admin/updates', { method:'DELETE', headers: authHeaders() })
+                          setPopupLive(false)
+                          setUpdateResult({ok:true, msg:'Popup hidden — no longer showing to stores.'})
+                        } else {
+                          // Re-activate the most recent update
+                          const latest = updateLogs[0]
+                          if (!latest) { setUpdateResult({ok:false, msg:'No update to show — publish one first.'}); return }
+                          await fetch('/api/admin/updates', {
+                            method:'POST', headers: authHeaders(),
+                            body: JSON.stringify({title:latest.title, message:latest.message, update_url:latest.update_url||null})
+                          })
+                          setPopupLive(true)
+                          setUpdateResult({ok:true, msg:'Popup is live again!'})
+                        }
+                        fetchUpdateLogs()
+                      } catch { setUpdateResult({ok:false, msg:'Network error.'}) }
+                      finally { setToggleSaving(false) }
+                    }}
+                    style={{
+                      display:'flex', alignItems:'center', gap:10,
+                      padding:'10px 20px', borderRadius:100, border:'none', cursor: toggleSaving ? 'wait' : 'pointer',
+                      background: popupLive ? '#ef4444' : '#22c55e',
+                      color:'#fff', fontWeight:700, fontSize:13,
+                      boxShadow: popupLive ? '0 4px 12px rgba(239,68,68,0.3)' : '0 4px 12px rgba(34,197,94,0.3)',
+                      transition:'all 0.2s', opacity: toggleSaving ? 0.7 : 1, whiteSpace:'nowrap',
+                    }}>
+                    <span style={{
+                      width:32, height:18, borderRadius:100, background:'rgba(255,255,255,0.3)',
+                      display:'flex', alignItems:'center', padding:'2px',
+                      justifyContent: popupLive ? 'flex-end' : 'flex-start',
+                    }}>
+                      <span style={{width:14, height:14, borderRadius:'50%', background:'#fff', display:'block'}}/>
+                    </span>
+                    {toggleSaving ? '…' : popupLive ? 'Hide Popup' : 'Show Popup'}
+                  </button>
+                </div>
 
                 {/* Compose card */}
-                <div style={s.generateCard}>
-                  <div style={{display:'flex', alignItems:'center', gap:10, marginBottom:6}}>
-                    <span style={{fontSize:22}}>📢</span>
-                    <h2 style={{...s.cardTitle, margin:0}}>Send Update Popup</h2>
-                  </div>
-                  <p style={{fontSize:13,color:'#64748b',marginBottom:20,lineHeight:1.6}}>
-                    Shows as a popup in the <strong>Shopify theme customisation editor</strong>. Merchants see <strong>Update Now</strong> (opens your link) or <strong>Later</strong> (reminds again in 24 h).
-                  </p>
-
-                  <div style={s.field}>
-                    <label style={s.label}>Update Title *</label>
-                    <input style={s.input} type="text" placeholder="e.g. 🎉 New Section: Shoppable Video"
-                      value={updateTitle} onChange={e => setUpdateTitle(e.target.value)} />
-                  </div>
-                  <div style={s.field}>
-                    <label style={s.label}>Message *</label>
-                    <textarea style={{...s.input, height:90, resize:'vertical'}}
-                      placeholder="Describe what's new…"
-                      value={updateMsg} onChange={e => setUpdateMsg(e.target.value)} />
-                  </div>
-                  <div style={s.field}>
-                    <label style={s.label}>Update URL <span style={{color:'#94a3b8',fontWeight:400}}>(optional — opens when merchant clicks "Update Now")</span></label>
-                    <input style={s.input} type="url" placeholder="https://createmyshop.in/update-guide"
-                      value={updateUrl} onChange={e => setUpdateUrl(e.target.value)} />
-                  </div>
-
-                  {updateResult && (
-                    <div style={{padding:'10px 14px',borderRadius:10,marginBottom:16,
-                      background: updateResult.ok ? '#f0fdf4' : '#fef2f2',
-                      border: `1.5px solid ${updateResult.ok ? '#bbf7d0' : '#fecaca'}`,
-                      color: updateResult.ok ? '#15803d' : '#dc2626', fontSize:13, fontWeight:600}}>
-                      {updateResult.msg}
+                <div style={{...s.generateCard, padding:0, overflow:'hidden'}}>
+                  {/* Card header */}
+                  <div style={{
+                    padding:'20px 24px 16px',
+                    borderBottom:'1px solid #f1f5f9',
+                    display:'flex', alignItems:'center', gap:12,
+                  }}>
+                    <div style={{
+                      width:38, height:38, borderRadius:12,
+                      background:'linear-gradient(135deg,#6366f1,#8b5cf6)',
+                      display:'flex', alignItems:'center', justifyContent:'center',
+                      fontSize:18, flexShrink:0,
+                    }}>📢</div>
+                    <div>
+                      <div style={{fontWeight:700, fontSize:15, color:'#0f172a'}}>Publish New Update</div>
+                      <div style={{fontSize:12, color:'#94a3b8', marginTop:1}}>Shows as popup in Shopify theme editor</div>
                     </div>
-                  )}
+                  </div>
 
-                  <div style={{display:'flex', gap:10}}>
-                    <button style={{...s.primaryBtn, opacity: updateSaving?0.7:1, flex:1}}
+                  <div style={{padding:'20px 24px 24px'}}>
+                    <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:14, marginBottom:14}}>
+                      <div style={s.field}>
+                        <label style={s.label}>Update Title *</label>
+                        <input style={s.input} type="text" placeholder="e.g. 🎉 New: Shoppable Video"
+                          value={updateTitle} onChange={e => setUpdateTitle(e.target.value)} />
+                      </div>
+                      <div style={s.field}>
+                        <label style={s.label}>Update URL <span style={{color:'#94a3b8',fontWeight:400}}>(optional)</span></label>
+                        <input style={s.input} type="url" placeholder="https://createmyshop.in/update"
+                          value={updateUrl} onChange={e => setUpdateUrl(e.target.value)} />
+                      </div>
+                    </div>
+                    <div style={{...s.field, marginBottom:16}}>
+                      <label style={s.label}>Message *</label>
+                      <textarea style={{...s.input, height:80, resize:'vertical'}}
+                        placeholder="Describe what's new…"
+                        value={updateMsg} onChange={e => setUpdateMsg(e.target.value)} />
+                    </div>
+
+                    {updateResult && (
+                      <div style={{padding:'10px 14px', borderRadius:10, marginBottom:14,
+                        background: updateResult.ok ? '#f0fdf4' : '#fef2f2',
+                        border: `1.5px solid ${updateResult.ok ? '#bbf7d0' : '#fecaca'}`,
+                        color: updateResult.ok ? '#15803d' : '#dc2626', fontSize:13, fontWeight:600}}>
+                        {updateResult.msg}
+                      </div>
+                    )}
+
+                    <button
+                      style={{...s.primaryBtn, opacity: updateSaving?0.7:1, width:'100%'}}
                       disabled={updateSaving}
                       onClick={async () => {
-                        if (!updateTitle || !updateMsg) { setUpdateResult({ok:false,msg:'Title and message required'}); return }
+                        if (!updateTitle || !updateMsg) { setUpdateResult({ok:false,msg:'Title and message are required'}); return }
                         setUpdateSaving(true); setUpdateResult(null)
                         try {
                           const r = await fetch('/api/admin/updates', {
@@ -555,67 +642,70 @@ export default function Dashboard() {
                             body: JSON.stringify({title:updateTitle, message:updateMsg, update_url:updateUrl||null})
                           })
                           if (r.ok) {
-                            setUpdateResult({ok:true, msg:'✅ Published! Popup is live in all activated stores.'})
+                            setUpdateResult({ok:true, msg:'✅ Published! Popup is now live in all activated stores.'})
                             setUpdateTitle(''); setUpdateMsg(''); setUpdateUrl('')
+                            setPopupLive(true)
                             fetchUpdateLogs()
                           } else setUpdateResult({ok:false, msg:'Failed to publish.'})
                         } catch { setUpdateResult({ok:false, msg:'Network error.'}) }
                         finally { setUpdateSaving(false) }
                       }}>
-                      {updateSaving ? 'Publishing…' : '📢 Publish Update'}
-                    </button>
-                    <button style={{...s.primaryBtn, background:'#ef4444', boxShadow:'none', flex:'0 0 auto', padding:'12px 20px'}}
-                      onClick={async () => {
-                        await fetch('/api/admin/updates', {method:'DELETE', headers: authHeaders()})
-                        setUpdateResult({ok:true, msg:'Popup cleared — hidden from all stores.'})
-                        fetchUpdateLogs()
-                      }}>
-                      Clear
+                      {updateSaving ? '⏳ Publishing…' : '🚀 Publish Update'}
                     </button>
                   </div>
                 </div>
 
                 {/* Changelog card */}
                 <div style={s.tableCard}>
-                  <div style={{padding:'16px 20px 12px', borderBottom:'1px solid #f1f5f9', display:'flex', alignItems:'center', gap:8}}>
+                  <div style={{padding:'16px 20px 14px', borderBottom:'1px solid #f1f5f9', display:'flex', alignItems:'center', gap:10}}>
                     <span style={{fontSize:16}}>📋</span>
                     <span style={{fontWeight:700, fontSize:15, color:'#0f172a'}}>Changelog</span>
-                    <span style={{marginLeft:'auto', fontSize:12, color:'#94a3b8'}}>{updateLogs.length} entries</span>
+                    <span style={{
+                      marginLeft:6, background:'#f1f5f9', color:'#64748b',
+                      borderRadius:100, padding:'2px 9px', fontSize:11, fontWeight:700,
+                    }}>{updateLogs.length}</span>
+                    <span style={{marginLeft:'auto', fontSize:12, color:'#94a3b8'}}>Most recent first</span>
                   </div>
                   {logsLoading ? (
                     <div style={s.centerMsg}><div style={s.spinner}/></div>
                   ) : updateLogs.length === 0 ? (
-                    <div style={{padding:'32px', textAlign:'center', color:'#94a3b8', fontSize:13}}>No updates published yet.</div>
+                    <div style={{padding:'40px', textAlign:'center'}}>
+                      <div style={{fontSize:36, marginBottom:10}}>📭</div>
+                      <div style={{color:'#94a3b8', fontSize:13}}>No updates published yet.</div>
+                    </div>
                   ) : (
-                    <div style={{padding:'8px 0'}}>
+                    <div>
                       {updateLogs.map((log, i) => (
                         <div key={log.id} style={{
                           display:'flex', alignItems:'flex-start', gap:14,
-                          padding:'14px 20px',
+                          padding:'16px 20px',
                           borderBottom: i < updateLogs.length-1 ? '1px solid #f8fafc' : 'none',
-                          opacity: log.is_active ? 1 : 0.55,
+                          background: log.is_active ? '#fafffe' : '#fff',
+                          transition:'background 0.2s',
                         }}>
-                          <div style={{
-                            width:8, height:8, borderRadius:'50%', marginTop:6, flexShrink:0,
-                            background: log.is_active ? '#22c55e' : '#cbd5e1',
-                            boxShadow: log.is_active ? '0 0 0 3px #dcfce7' : 'none',
-                          }}/>
+                          <div style={{paddingTop:3, flexShrink:0}}>
+                            <div style={{
+                              width:10, height:10, borderRadius:'50%',
+                              background: log.is_active ? '#22c55e' : '#e2e8f0',
+                              boxShadow: log.is_active ? '0 0 0 3px rgba(34,197,94,0.2)' : 'none',
+                            }}/>
+                          </div>
                           <div style={{flex:1, minWidth:0}}>
-                            <div style={{display:'flex', alignItems:'center', gap:8, flexWrap:'wrap', marginBottom:3}}>
+                            <div style={{display:'flex', alignItems:'center', gap:8, flexWrap:'wrap', marginBottom:4}}>
                               <span style={{fontWeight:700, fontSize:14, color:'#0f172a'}}>{log.title}</span>
                               {log.is_active
-                                ? <span style={{fontSize:10, fontWeight:700, background:'#dcfce7', color:'#16a34a', borderRadius:100, padding:'2px 8px', letterSpacing:'0.04em'}}>LIVE</span>
-                                : <span style={{fontSize:10, fontWeight:700, background:'#f1f5f9', color:'#94a3b8', borderRadius:100, padding:'2px 8px', letterSpacing:'0.04em'}}>CLEARED</span>}
+                                ? <span style={{fontSize:10, fontWeight:800, background:'#dcfce7', color:'#16a34a', borderRadius:100, padding:'2px 9px', letterSpacing:'0.05em'}}>● LIVE</span>
+                                : <span style={{fontSize:10, fontWeight:700, background:'#f1f5f9', color:'#94a3b8', borderRadius:100, padding:'2px 9px', letterSpacing:'0.05em'}}>CLEARED</span>}
                             </div>
-                            <div style={{fontSize:13, color:'#64748b', marginBottom:4, lineHeight:1.5}}>{log.message}</div>
+                            <div style={{fontSize:13, color:'#64748b', marginBottom:6, lineHeight:1.55}}>{log.message}</div>
                             <div style={{display:'flex', alignItems:'center', gap:12, flexWrap:'wrap'}}>
                               <span style={{fontSize:11, color:'#94a3b8'}}>
-                                {log.created_at ? new Date(log.created_at).toLocaleString('en-IN') : '—'}
+                                🕐 {log.created_at ? new Date(log.created_at).toLocaleString('en-IN') : '—'}
                               </span>
                               {log.update_url && (
                                 <a href={log.update_url} target="_blank" rel="noopener"
-                                  style={{fontSize:11, color:'#6366f1', fontWeight:600, textDecoration:'none'}}>
-                                  🔗 {log.update_url.length > 40 ? log.update_url.slice(0,40)+'…' : log.update_url}
+                                  style={{fontSize:11, color:'#6366f1', fontWeight:600, textDecoration:'none', display:'flex', alignItems:'center', gap:3}}>
+                                  🔗 {log.update_url.length > 45 ? log.update_url.slice(0,45)+'…' : log.update_url}
                                 </a>
                               )}
                             </div>
