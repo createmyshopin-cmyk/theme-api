@@ -21,6 +21,27 @@ export default function Dashboard() {
   const [genResult, setGenResult]   = useState(null)
   const [genError, setGenError]     = useState('')
   const [genLoading, setGenLoading] = useState(false)
+  const [genDial, setGenDial]       = useState('+91')
+  const [genCC, setGenCC]           = useState('IN')
+  const [genDropOpen, setGenDropOpen] = useState(false)
+  const [genCCSearch, setGenCCSearch] = useState('')
+
+  const COUNTRIES = [
+    ['IN','+91','India'],['US','+1','United States'],['GB','+44','United Kingdom'],
+    ['AU','+61','Australia'],['CA','+1','Canada'],['AE','+971','UAE'],
+    ['SA','+966','Saudi Arabia'],['QA','+974','Qatar'],['KW','+965','Kuwait'],
+    ['BH','+973','Bahrain'],['OM','+968','Oman'],['SG','+65','Singapore'],
+    ['MY','+60','Malaysia'],['PK','+92','Pakistan'],['BD','+880','Bangladesh'],
+    ['LK','+94','Sri Lanka'],['NP','+977','Nepal'],['PH','+63','Philippines'],
+    ['ID','+62','Indonesia'],['TH','+66','Thailand'],['VN','+84','Vietnam'],
+    ['JP','+81','Japan'],['CN','+86','China'],['NG','+234','Nigeria'],
+    ['KE','+254','Kenya'],['ZA','+27','South Africa'],['DE','+49','Germany'],
+    ['FR','+33','France'],['IT','+39','Italy'],['ES','+34','Spain'],
+    ['NL','+31','Netherlands'],['BR','+55','Brazil'],['MX','+52','Mexico'],
+  ]
+  const filteredCountries = COUNTRIES.filter(c =>
+    !genCCSearch || c[2].toLowerCase().includes(genCCSearch.toLowerCase()) || c[1].includes(genCCSearch)
+  )
   const [search, setSearch]         = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
   const [toast, setToast]           = useState(null)
@@ -112,10 +133,11 @@ export default function Dashboard() {
     e.preventDefault()
     setGenError(''); setGenResult(null); setGenLoading(true)
     try {
+      const fullPhone = genPhone.startsWith('+') ? genPhone : genDial + genPhone
       const res = await fetch('/api/admin/generate', {
         method: 'POST',
         headers: authHeaders(),
-        body: JSON.stringify({ phone: genPhone, notes: genNotes }),
+        body: JSON.stringify({ phone: fullPhone, notes: genNotes }),
       })
       const data = await res.json()
       if (!res.ok) {
@@ -722,32 +744,160 @@ export default function Dashboard() {
             {/* Generate */}
             {activeNav === 'generate' && (
               <div style={s.generateWrap}>
-                <div style={s.generateCard}>
-                  <h2 style={s.cardTitle}>New License</h2>
-                  <form onSubmit={handleGenerate}>
-                    <div style={s.field}>
-                      <label style={s.label}>Phone Number *</label>
-                      <input style={s.input} type="tel" placeholder="+91 98765 43210"
-                        value={genPhone} onChange={e => setGenPhone(e.target.value)} required />
+                <div style={{...s.generateCard, padding:0, overflow:'hidden', maxWidth:520}}>
+
+                  {/* Card header */}
+                  <div style={{
+                    background:'linear-gradient(135deg,#6366f1,#8b5cf6)',
+                    padding:'28px 28px 24px', position:'relative', overflow:'hidden',
+                  }}>
+                    <div style={{
+                      position:'absolute', top:-40, right:-40, width:160, height:160,
+                      borderRadius:'50%', background:'rgba(255,255,255,0.07)',
+                    }}/>
+                    <div style={{
+                      position:'absolute', bottom:-20, left:60, width:100, height:100,
+                      borderRadius:'50%', background:'rgba(255,255,255,0.05)',
+                    }}/>
+                    <div style={{position:'relative'}}>
+                      <div style={{
+                        display:'inline-flex', alignItems:'center', gap:6,
+                        background:'rgba(255,255,255,0.18)', border:'1px solid rgba(255,255,255,0.25)',
+                        borderRadius:100, padding:'4px 12px', marginBottom:12,
+                        fontSize:11, fontWeight:700, color:'#fff', letterSpacing:'0.06em', textTransform:'uppercase',
+                      }}>✨ Generate License</div>
+                      <div style={{fontSize:22, fontWeight:800, color:'#fff', lineHeight:1.2}}>Create New License Key</div>
+                      <div style={{fontSize:13, color:'rgba(255,255,255,0.65)', marginTop:6}}>Enter customer's WhatsApp number to generate</div>
                     </div>
-                    <div style={s.field}>
+                  </div>
+
+                  <form onSubmit={handleGenerate} style={{padding:'24px 28px 28px'}}>
+
+                    {/* Phone with country selector */}
+                    <div style={{...s.field, marginBottom:16}}>
+                      <label style={s.label}>WhatsApp / Phone Number *</label>
+                      <div style={{position:'relative', display:'flex', alignItems:'stretch', border:'1.5px solid #e2e8f0', borderRadius:14, overflow:'visible', background:'#fff', boxShadow:'0 1px 3px rgba(0,0,0,0.06)'}}>
+
+                        {/* Country trigger */}
+                        <button type="button"
+                          onClick={() => { setGenDropOpen(v => !v); setGenCCSearch('') }}
+                          style={{
+                            display:'flex', alignItems:'center', gap:7, padding:'0 14px',
+                            background:'#f8fafc', border:'none', borderRight:'1.5px solid #e2e8f0',
+                            borderRadius:'12px 0 0 12px', cursor:'pointer', flexShrink:0,
+                            minWidth:90, justifyContent:'center',
+                          }}>
+                          <img src={`https://flagcdn.com/w40/${genCC.toLowerCase()}.png`} alt={genCC}
+                            style={{width:22,height:15,borderRadius:3,objectFit:'cover'}} />
+                          <span style={{fontSize:13,fontWeight:700,color:'#374151'}}>{genDial}</span>
+                          <span style={{fontSize:10,color:'#94a3b8'}}>▼</span>
+                        </button>
+
+                        {/* Dropdown */}
+                        {genDropOpen && (
+                          <div style={{
+                            position:'absolute', top:'calc(100% + 6px)', left:0, zIndex:9999,
+                            background:'#fff', border:'1.5px solid #e2e8f0', borderRadius:14,
+                            boxShadow:'0 16px 48px rgba(0,0,0,0.14)', width:260, overflow:'hidden',
+                          }}
+                          onMouseDown={e => e.preventDefault()}>
+                            <div style={{padding:'10px 12px', borderBottom:'1px solid #f1f5f9'}}>
+                              <input
+                                autoFocus
+                                value={genCCSearch}
+                                onChange={e => setGenCCSearch(e.target.value)}
+                                placeholder="🔍 Search country…"
+                                style={{width:'100%', border:'1.5px solid #e2e8f0', borderRadius:8, padding:'7px 10px', fontSize:13, outline:'none', boxSizing:'border-box'}}
+                              />
+                            </div>
+                            <div style={{maxHeight:200, overflowY:'auto'}}>
+                              {filteredCountries.map(c => (
+                                <div key={c[0]+c[1]}
+                                  onClick={() => { setGenCC(c[0]); setGenDial(c[1]); setGenDropOpen(false); setGenCCSearch('') }}
+                                  style={{
+                                    display:'flex', alignItems:'center', gap:10, padding:'9px 14px',
+                                    cursor:'pointer', background: genCC===c[0] ? '#f0f4ff' : 'transparent',
+                                    borderLeft: genCC===c[0] ? '3px solid #6366f1' : '3px solid transparent',
+                                  }}
+                                  onMouseEnter={e => e.currentTarget.style.background='#f8fafc'}
+                                  onMouseLeave={e => e.currentTarget.style.background=genCC===c[0]?'#f0f4ff':'transparent'}>
+                                  <img src={`https://flagcdn.com/w40/${c[0].toLowerCase()}.png`} alt={c[0]}
+                                    style={{width:22,height:15,borderRadius:2,objectFit:'cover',flexShrink:0}} />
+                                  <span style={{flex:1,fontSize:13,color:'#374151'}}>{c[2]}</span>
+                                  <span style={{fontSize:12,color:'#94a3b8',fontWeight:600}}>{c[1]}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        <input
+                          type="tel" inputMode="numeric"
+                          placeholder="98765 43210"
+                          value={genPhone}
+                          onChange={e => setGenPhone(e.target.value.replace(/[^\d]/g,''))}
+                          onBlur={() => setGenDropOpen(false)}
+                          required
+                          style={{
+                            flex:1, border:'none', outline:'none', padding:'14px 16px',
+                            fontSize:15, fontWeight:600, color:'#0f172a',
+                            background:'transparent', borderRadius:'0 12px 12px 0',
+                          }}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Notes */}
+                    <div style={{...s.field, marginBottom:20}}>
                       <label style={s.label}>Theme Name / Notes</label>
-                      <input style={s.input} type="text" placeholder="e.g. Triara Express — Order #1234"
+                      <input style={{...s.input, borderRadius:14}}
+                        type="text" placeholder="e.g. Triara Express — Order #1234"
                         value={genNotes} onChange={e => setGenNotes(e.target.value)} />
                     </div>
-                    {genError && <p style={s.err}>{genError}</p>}
-                    {genResult && (
-                      <div style={{ ...s.resultBox, background: genResult.existing ? '#fef3c7' : '#f0fdf4', border: `1.5px solid ${genResult.existing ? '#fde68a' : '#bbf7d0'}` }}>
-                        <div style={s.resultLabel}>{genResult.existing ? 'Existing license:' : '✅ License created:'}</div>
-                        <div style={s.resultCode} onClick={() => copyCode(genResult.license_code)}>
-                          {genResult.license_code}
-                          <span style={s.copyHint}>click to copy</span>
-                        </div>
-                        <div style={s.resultPhone}>{genResult.phone}</div>
+
+                    {genError && (
+                      <div style={{padding:'10px 14px', borderRadius:10, marginBottom:14,
+                        background:'#fef2f2', border:'1.5px solid #fecaca', color:'#dc2626', fontSize:13, fontWeight:600}}>
+                        {genError}
                       </div>
                     )}
-                    <button style={{ ...s.primaryBtn, opacity: genLoading ? 0.7 : 1 }} type="submit" disabled={genLoading}>
-                      {genLoading ? 'Generating…' : '+ Generate License'}
+
+                    {genResult && (
+                      <div style={{
+                        borderRadius:16, marginBottom:16, overflow:'hidden',
+                        background: genResult.existing ? '#fffbeb' : '#f0fdf4',
+                        border: `1.5px solid ${genResult.existing ? '#fde68a' : '#bbf7d0'}`,
+                      }}>
+                        <div style={{padding:'12px 16px 10px', display:'flex', alignItems:'center', gap:8}}>
+                          <span style={{fontSize:14, fontWeight:700, color: genResult.existing ? '#92400e' : '#15803d'}}>
+                            {genResult.existing ? '⚠️ Existing license found' : '✅ License created!'}
+                          </span>
+                        </div>
+                        <div style={{
+                          margin:'0 14px 14px', background:'#fff', borderRadius:12, padding:'14px 18px',
+                          display:'flex', alignItems:'center', justifyContent:'space-between',
+                          border:`1px solid ${genResult.existing ? '#fde68a' : '#bbf7d0'}`,
+                          cursor:'pointer',
+                        }} onClick={() => copyCode(genResult.license_code)}>
+                          <span style={{fontSize:28, fontWeight:900, letterSpacing:6, color:'#0f172a', fontVariantNumeric:'tabular-nums'}}>
+                            {genResult.license_code}
+                          </span>
+                          <span style={{fontSize:11, color:'#6366f1', fontWeight:700, background:'#eef2ff', padding:'4px 10px', borderRadius:8}}>
+                            📋 Copy
+                          </span>
+                        </div>
+                        <div style={{padding:'0 16px 12px', fontSize:12, color:'#64748b'}}>{genResult.phone}</div>
+                      </div>
+                    )}
+
+                    <button style={{
+                      width:'100%', padding:'15px', border:'none', borderRadius:14,
+                      background: genLoading ? '#a5b4fc' : 'linear-gradient(135deg,#6366f1,#8b5cf6)',
+                      color:'#fff', fontSize:15, fontWeight:800, cursor: genLoading ? 'wait' : 'pointer',
+                      boxShadow:'0 8px 24px rgba(99,102,241,0.35)',
+                      transition:'all 0.2s', display:'flex', alignItems:'center', justifyContent:'center', gap:8,
+                    }} type="submit" disabled={genLoading}>
+                      {genLoading ? '⏳ Generating…' : '✨ Generate License Key'}
                     </button>
                   </form>
                 </div>
