@@ -6,21 +6,19 @@ export default async function handler(req, res) {
 
   if (req.method === 'GET') {
     const rows = await query(
-      'SELECT id, title, message, is_active, created_at FROM theme_updates ORDER BY created_at DESC LIMIT 1',
+      'SELECT id, title, message, update_url, is_active, created_at FROM theme_updates ORDER BY created_at DESC',
       []
     )
-    return res.json(rows[0] || null)
+    return res.json(rows)
   }
 
   if (req.method === 'POST') {
-    const { title, message } = req.body || {}
+    const { title, message, update_url } = req.body || {}
     if (!title || !message) return res.status(400).json({ error: 'title and message required' })
-    // Deactivate all previous
     await query('UPDATE theme_updates SET is_active = 0', [])
-    // Insert new active update
     await query(
-      'INSERT INTO theme_updates (title, message, is_active, created_at) VALUES (?, ?, 1, NOW())',
-      [title, message]
+      'INSERT INTO theme_updates (title, message, update_url, is_active, created_at) VALUES (?, ?, ?, 1, NOW())',
+      [title, message, update_url || null]
     )
     return res.json({ success: true })
   }

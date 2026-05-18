@@ -32,10 +32,13 @@ export default function Dashboard() {
   const [pinLoading, setPinLoading] = useState(false)
   const [registrations, setRegistrations] = useState([])
   const [regLoading, setRegLoading] = useState(false)
-  const [updateTitle, setUpdateTitle] = useState('')
-  const [updateMsg, setUpdateMsg]     = useState('')
+  const [updateTitle, setUpdateTitle]   = useState('')
+  const [updateMsg, setUpdateMsg]       = useState('')
+  const [updateUrl, setUpdateUrl]       = useState('')
   const [updateSaving, setUpdateSaving] = useState(false)
   const [updateResult, setUpdateResult] = useState(null)
+  const [updateLogs, setUpdateLogs]     = useState([])
+  const [logsLoading, setLogsLoading]   = useState(false)
 
   useEffect(() => {
     const t = localStorage.getItem('triara_admin_token')
@@ -77,6 +80,19 @@ export default function Dashboard() {
   }, [token])
 
   useEffect(() => { if (activeNav === 'registrations') fetchRegistrations() }, [activeNav, fetchRegistrations])
+
+  const fetchUpdateLogs = useCallback(async () => {
+    if (!token) return
+    setLogsLoading(true)
+    try {
+      const res = await fetch('/api/admin/updates', { headers: authHeaders() })
+      const data = await res.json()
+      setUpdateLogs(Array.isArray(data) ? data : [])
+    } catch {}
+    finally { setLogsLoading(false) }
+  }, [token])
+
+  useEffect(() => { if (activeNav === 'updates') fetchUpdateLogs() }, [activeNav, fetchUpdateLogs])
 
   function showToast(msg, type = 'success') {
     setToast({ msg, type })
@@ -489,23 +505,35 @@ export default function Dashboard() {
 
             {/* Push Updates */}
             {isUpdates && (
-              <div style={s.generateWrap}>
+              <div style={{display:'flex', flexDirection:'column', gap:20}}>
+
+                {/* Compose card */}
                 <div style={s.generateCard}>
-                  <h2 style={s.cardTitle}>📢 Send Update Popup</h2>
+                  <div style={{display:'flex', alignItems:'center', gap:10, marginBottom:6}}>
+                    <span style={{fontSize:22}}>📢</span>
+                    <h2 style={{...s.cardTitle, margin:0}}>Send Update Popup</h2>
+                  </div>
                   <p style={{fontSize:13,color:'#64748b',marginBottom:20,lineHeight:1.6}}>
-                    This popup will show <strong>only in the Shopify theme customisation editor</strong> for all activated stores. Use it to announce new features, sections, or updates.
+                    Shows as a popup in the <strong>Shopify theme customisation editor</strong>. Merchants see <strong>Update Now</strong> (opens your link) or <strong>Later</strong> (reminds again in 24 h).
                   </p>
+
                   <div style={s.field}>
                     <label style={s.label}>Update Title *</label>
-                    <input style={s.input} type="text" placeholder="e.g. 🎉 New Feature: Shoppable Video Block"
+                    <input style={s.input} type="text" placeholder="e.g. 🎉 New Section: Shoppable Video"
                       value={updateTitle} onChange={e => setUpdateTitle(e.target.value)} />
                   </div>
                   <div style={s.field}>
                     <label style={s.label}>Message *</label>
-                    <textarea style={{...s.input, height:100, resize:'vertical'}}
-                      placeholder="Describe the update in detail…"
+                    <textarea style={{...s.input, height:90, resize:'vertical'}}
+                      placeholder="Describe what's new…"
                       value={updateMsg} onChange={e => setUpdateMsg(e.target.value)} />
                   </div>
+                  <div style={s.field}>
+                    <label style={s.label}>Update URL <span style={{color:'#94a3b8',fontWeight:400}}>(optional — opens when merchant clicks "Update Now")</span></label>
+                    <input style={s.input} type="url" placeholder="https://createmyshop.in/update-guide"
+                      value={updateUrl} onChange={e => setUpdateUrl(e.target.value)} />
+                  </div>
+
                   {updateResult && (
                     <div style={{padding:'10px 14px',borderRadius:10,marginBottom:16,
                       background: updateResult.ok ? '#f0fdf4' : '#fef2f2',
@@ -514,7 +542,8 @@ export default function Dashboard() {
                       {updateResult.msg}
                     </div>
                   )}
-                  <div style={{display:'flex',gap:10}}>
+
+                  <div style={{display:'flex', gap:10}}>
                     <button style={{...s.primaryBtn, opacity: updateSaving?0.7:1, flex:1}}
                       disabled={updateSaving}
                       onClick={async () => {
@@ -523,11 +552,14 @@ export default function Dashboard() {
                         try {
                           const r = await fetch('/api/admin/updates', {
                             method:'POST', headers: authHeaders(),
-                            body: JSON.stringify({title:updateTitle, message:updateMsg})
+                            body: JSON.stringify({title:updateTitle, message:updateMsg, update_url:updateUrl||null})
                           })
-                          if (r.ok) { setUpdateResult({ok:true,msg:'✅ Update published to all activated stores!'}); setUpdateTitle(''); setUpdateMsg('') }
-                          else setUpdateResult({ok:false,msg:'Failed to publish update.'})
-                        } catch { setUpdateResult({ok:false,msg:'Network error.'}) }
+                          if (r.ok) {
+                            setUpdateResult({ok:true, msg:'✅ Published! Popup is live in all activated stores.'})
+                            setUpdateTitle(''); setUpdateMsg(''); setUpdateUrl('')
+                            fetchUpdateLogs()
+                          } else setUpdateResult({ok:false, msg:'Failed to publish.'})
+                        } catch { setUpdateResult({ok:false, msg:'Network error.'}) }
                         finally { setUpdateSaving(false) }
                       }}>
                       {updateSaving ? 'Publishing…' : '📢 Publish Update'}
@@ -535,12 +567,65 @@ export default function Dashboard() {
                     <button style={{...s.primaryBtn, background:'#ef4444', boxShadow:'none', flex:'0 0 auto', padding:'12px 20px'}}
                       onClick={async () => {
                         await fetch('/api/admin/updates', {method:'DELETE', headers: authHeaders()})
-                        setUpdateResult({ok:true, msg:'Update cleared — popup hidden from stores.'})
+                        setUpdateResult({ok:true, msg:'Popup cleared — hidden from all stores.'})
+                        fetchUpdateLogs()
                       }}>
                       Clear
                     </button>
                   </div>
                 </div>
+
+                {/* Changelog card */}
+                <div style={s.tableCard}>
+                  <div style={{padding:'16px 20px 12px', borderBottom:'1px solid #f1f5f9', display:'flex', alignItems:'center', gap:8}}>
+                    <span style={{fontSize:16}}>📋</span>
+                    <span style={{fontWeight:700, fontSize:15, color:'#0f172a'}}>Changelog</span>
+                    <span style={{marginLeft:'auto', fontSize:12, color:'#94a3b8'}}>{updateLogs.length} entries</span>
+                  </div>
+                  {logsLoading ? (
+                    <div style={s.centerMsg}><div style={s.spinner}/></div>
+                  ) : updateLogs.length === 0 ? (
+                    <div style={{padding:'32px', textAlign:'center', color:'#94a3b8', fontSize:13}}>No updates published yet.</div>
+                  ) : (
+                    <div style={{padding:'8px 0'}}>
+                      {updateLogs.map((log, i) => (
+                        <div key={log.id} style={{
+                          display:'flex', alignItems:'flex-start', gap:14,
+                          padding:'14px 20px',
+                          borderBottom: i < updateLogs.length-1 ? '1px solid #f8fafc' : 'none',
+                          opacity: log.is_active ? 1 : 0.55,
+                        }}>
+                          <div style={{
+                            width:8, height:8, borderRadius:'50%', marginTop:6, flexShrink:0,
+                            background: log.is_active ? '#22c55e' : '#cbd5e1',
+                            boxShadow: log.is_active ? '0 0 0 3px #dcfce7' : 'none',
+                          }}/>
+                          <div style={{flex:1, minWidth:0}}>
+                            <div style={{display:'flex', alignItems:'center', gap:8, flexWrap:'wrap', marginBottom:3}}>
+                              <span style={{fontWeight:700, fontSize:14, color:'#0f172a'}}>{log.title}</span>
+                              {log.is_active
+                                ? <span style={{fontSize:10, fontWeight:700, background:'#dcfce7', color:'#16a34a', borderRadius:100, padding:'2px 8px', letterSpacing:'0.04em'}}>LIVE</span>
+                                : <span style={{fontSize:10, fontWeight:700, background:'#f1f5f9', color:'#94a3b8', borderRadius:100, padding:'2px 8px', letterSpacing:'0.04em'}}>CLEARED</span>}
+                            </div>
+                            <div style={{fontSize:13, color:'#64748b', marginBottom:4, lineHeight:1.5}}>{log.message}</div>
+                            <div style={{display:'flex', alignItems:'center', gap:12, flexWrap:'wrap'}}>
+                              <span style={{fontSize:11, color:'#94a3b8'}}>
+                                {log.created_at ? new Date(log.created_at).toLocaleString('en-IN') : '—'}
+                              </span>
+                              {log.update_url && (
+                                <a href={log.update_url} target="_blank" rel="noopener"
+                                  style={{fontSize:11, color:'#6366f1', fontWeight:600, textDecoration:'none'}}>
+                                  🔗 {log.update_url.length > 40 ? log.update_url.slice(0,40)+'…' : log.update_url}
+                                </a>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
               </div>
             )}
 
