@@ -7,8 +7,11 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end()
 
   const rows = await query(
-    'SELECT title, message, update_url FROM theme_updates WHERE is_active = 1 ORDER BY created_at DESC LIMIT 1',
+    'SELECT title, message, update_url, is_active, created_at FROM theme_updates ORDER BY created_at DESC LIMIT 20',
     []
   )
-  return res.json(rows[0] || null)
+  if (rows.length === 0) return res.json(null)
+  // latest active is the "current" update; full list is the changelog
+  const active = rows.find(r => r.is_active) || null
+  return res.json({ current: active, changelog: rows })
 }
