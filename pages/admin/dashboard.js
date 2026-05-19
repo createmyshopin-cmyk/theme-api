@@ -172,6 +172,7 @@ export default function Dashboard() {
     if (!token) return
     try {
       const res  = await fetch('/api/admin/licenses', { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' } })
+      if (res.status === 401) { handleLogout(); return }
       if (!res.ok) { setLoading(false); return }
       const data = await res.json()
       if (!Array.isArray(data)) { setLoading(false); return }
@@ -221,6 +222,7 @@ export default function Dashboard() {
     if (!token) return
     try {
       const res  = await fetch('/api/admin/registrations', { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' } })
+      if (res.status === 401) { handleLogout(); return }
       if (!res.ok) return
       const data = await res.json()
       if (!Array.isArray(data)) return
@@ -333,6 +335,35 @@ export default function Dashboard() {
   }
   function isRecent(dateStr) {
     return (Date.now() - new Date(dateStr)) < 24 * 60 * 60 * 1000
+  }
+  function daysLeft(expiresAt) {
+    if (!expiresAt) return null
+    return Math.ceil((new Date(expiresAt) - Date.now()) / (1000 * 60 * 60 * 24))
+  }
+  function ExpiryBadge({ expiresAt }) {
+    if (!expiresAt) return <span style={s.muted}>—</span>
+    const days = daysLeft(expiresAt)
+    const expired = days <= 0
+    const critical = !expired && days <= 30
+    const warning  = !expired && !critical && days <= 90
+    const color = expired ? '#dc2626' : critical ? '#ea580c' : warning ? '#d97706' : '#16a34a'
+    const bg    = expired ? '#fef2f2' : critical ? '#fff7ed' : warning ? '#fffbeb' : '#f0fdf4'
+    const border= expired ? '#fecaca' : critical ? '#fed7aa' : warning ? '#fde68a' : '#bbf7d0'
+    const label = expired ? 'Expired' : `${days}d left`
+    return (
+      <span style={{ display:'inline-flex', flexDirection:'column', gap:2 }}>
+        <span style={{ fontSize:11, color:'#64748b' }}>
+          {new Date(expiresAt).toLocaleDateString('en-IN')}
+        </span>
+        <span style={{
+          display:'inline-block', fontSize:10, fontWeight:800,
+          background: bg, color, border:`1px solid ${border}`,
+          borderRadius:100, padding:'2px 8px', letterSpacing:'0.03em',
+        }}>
+          {expired ? '⛔ ' : critical ? '🔴 ' : warning ? '🟡 ' : '🟢 '}{label}
+        </span>
+      </span>
+    )
   }
 
   const now = new Date()
@@ -616,7 +647,7 @@ export default function Dashboard() {
                     <div id="cms-desktop-table" style={s.tableWrap}>
                       <table style={s.table}>
                         <thead>
-                          <tr>{['WhatsApp / Phone','Store Name','Shop Domain','Theme Used','Activated Date','Last Seen'].map(h=>(
+                          <tr>{['WhatsApp / Phone','Store Name','Shop Domain','Theme Used','Activated Date','Expires','Last Seen'].map(h=>(
                             <th key={h} style={s.th}>{h}</th>
                           ))}</tr>
                         </thead>
@@ -643,6 +674,9 @@ export default function Dashboard() {
                                 <span style={s.dateText}>
                                   {lic.activated_at ? new Date(lic.activated_at).toLocaleString('en-IN') : <span style={s.muted}>—</span>}
                                 </span>
+                              </td>
+                              <td style={s.td}>
+                                <ExpiryBadge expiresAt={lic.expires_at} />
                               </td>
                               <td style={s.td}>
                                 {lic.last_seen ? (
@@ -1103,7 +1137,7 @@ export default function Dashboard() {
                       <table style={s.table}>
                         <thead>
                           <tr>
-                            {['Phone', 'Code', 'Theme Name', 'Store Name', 'Shop Domain', 'Status', 'Created', 'Activated', 'Last Seen', 'Actions'].map(h => (
+                            {['Phone', 'Code', 'Theme Name', 'Store Name', 'Shop Domain', 'Status', 'Created', 'Activated', 'Expires', 'Last Seen', 'Actions'].map(h => (
                               <th key={h} style={s.th}>{h}</th>
                             ))}
                           </tr>
@@ -1144,6 +1178,9 @@ export default function Dashboard() {
                                 <span style={s.dateText}>
                                   {lic.activated_at ? new Date(lic.activated_at).toLocaleDateString('en-IN') : <span style={s.muted}>—</span>}
                                 </span>
+                              </td>
+                              <td style={s.td}>
+                                <ExpiryBadge expiresAt={lic.expires_at} />
                               </td>
                               <td style={s.td}>
                                 {lic.last_seen ? (
