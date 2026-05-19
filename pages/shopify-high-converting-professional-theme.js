@@ -910,7 +910,7 @@ function RiskReversal() {
 }
 
 /* ─────────────────── WhatsApp Share ─────────────────── */
-const WA_SHARE_URL = 'https://theme-api.createmshop.in/shopify-high-converting-professional-theme';
+const WA_SHARE_URL = 'https://theme-api.createmyshop.in/shopify-high-converting-professional-theme';
 const WA_SHARE_TEXT = encodeURIComponent('🚀 Check out ThemePro V2 — The fastest Shopify 2.0 theme with 99/100 PageSpeed! Built-in upsells, timers & trust badges. One-time ₹2499, 1 year free support & updates. 100+ stores trust it.\n\n');
 
 function WhatsAppShareButton({ style = {} }) {
@@ -978,16 +978,16 @@ export default function ThemePage() {
         <meta name="keywords" content="shopify theme, best shopify theme, shopify 2.0 theme, high converting shopify theme, dropshipping theme, fashion shopify theme, fast shopify theme, themepro v2, shopify theme india" />
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="canonical" href="https://theme-api.createmshop.in/shopify-high-converting-professional-theme" />
+        <link rel="canonical" href="https://theme-api.createmyshop.in/shopify-high-converting-professional-theme" />
 
         {/* ── Open Graph (WhatsApp, Facebook, LinkedIn) ── */}
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="ThemePro V2" />
         <meta property="og:title" content="ThemePro V2 — #1 High-Converting Shopify Theme | 99/100 PageSpeed" />
         <meta property="og:description" content="The fastest Shopify 2.0 theme on the market. Built-in upsells, timers & trust badges. One-time payment ₹2499 · 1 Year Free Support & Updates · 30-day refund. 100+ stores running ThemePro V2." />
-        <meta property="og:url" content="https://theme-api.createmshop.in/shopify-high-converting-professional-theme" />
-        <meta property="og:image" content="https://theme-api.createmshop.in/og-cover.png" />
-        <meta property="og:image:secure_url" content="https://theme-api.createmshop.in/og-cover.png" />
+        <meta property="og:url" content="https://theme-api.createmyshop.in/shopify-high-converting-professional-theme" />
+        <meta property="og:image" content="https://theme-api.createmyshop.in/og-cover.png" />
+        <meta property="og:image:secure_url" content="https://theme-api.createmyshop.in/og-cover.png" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta property="og:image:type" content="image/png" />
@@ -998,7 +998,7 @@ export default function ThemePage() {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="ThemePro V2 — #1 High-Converting Shopify Theme" />
         <meta name="twitter:description" content="The fastest Shopify 2.0 theme. 99/100 PageSpeed. Built-in upsells & timers. One-time ₹2499. 1 Year Free Support & Updates. 100+ stores." />
-        <meta name="twitter:image" content="https://theme-api.createmshop.in/og-cover.png" />
+        <meta name="twitter:image" content="https://theme-api.createmyshop.in/og-cover.png" />
         <meta name="twitter:image:alt" content="ThemePro V2 — High-Converting Shopify Theme" />
 
         {/* ── Structured Data: Product ── */}
@@ -1007,7 +1007,7 @@ export default function ThemePage() {
           "@type": "Product",
           "name": "ThemePro V2 Shopify Theme",
           "description": "The fastest Shopify 2.0 theme for dropshipping, fashion, jewellery and e-commerce. One-time payment, 1 year free support & updates.",
-          "image": "https://theme-api.createmshop.in/og-cover.png",
+          "image": "https://theme-api.createmyshop.in/og-cover.png",
           "brand": { "@type": "Brand", "name": "ThemePro V2" },
           "offers": {
             "@type": "Offer",
@@ -1042,8 +1042,8 @@ export default function ThemePage() {
           "@context": "https://schema.org",
           "@type": "Organization",
           "name": "ThemePro V2",
-          "url": "https://theme-api.createmshop.in",
-          "logo": "https://theme-api.createmshop.in/logo.png",
+          "url": "https://theme-api.createmyshop.in",
+          "logo": "https://theme-api.createmyshop.in/logo.png",
           "sameAs": []
         })}} />
 
