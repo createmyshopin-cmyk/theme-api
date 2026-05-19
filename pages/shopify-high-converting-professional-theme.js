@@ -86,7 +86,7 @@ function Hero() {
 
         {/* Sub-headline */}
         <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: 'clamp(15px, 1.8vw, 18px)', maxWidth: 560, margin: '0 auto 32px', lineHeight: 1.6, fontWeight: 400 }}>
-          Launch a stunning, ultra-fast store in minutes — no code, no designer needed. One-time payment, lifetime updates.
+          Launch a stunning, ultra-fast store in minutes — no code, no designer needed. One-time payment, 1 year free support & updates.
         </p>
 
         {/* CTAs */}
@@ -101,9 +101,14 @@ function Hero() {
           </a>
         </div>
 
+        {/* WhatsApp Share */}
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 18 }}>
+          <WhatsAppShareButton />
+        </div>
+
         {/* Micro trust */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 20, marginTop: 22, flexWrap: 'wrap' }}>
-          {['One-time payment', 'Lifetime updates', '30-day refund'].map((item, i) => (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 20, marginTop: 18, flexWrap: 'wrap' }}>
+          {['One-time payment', '1 Year Free Support', '1 Year Free Updates', '30-day refund'].map((item, i) => (
             <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: 'rgba(255,255,255,0.45)', fontSize: 13, fontWeight: 500 }}>
               <svg viewBox="0 0 16 16" width="13" height="13" fill="none"><path d="M3 8l3.5 3.5L13 4.5" stroke="#4ade80" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
               {item}
@@ -155,7 +160,7 @@ function Hero() {
 
       <div className="strap">
         <div className="strap-inner">
-          {['Free Lifetime Update', 'High Speed Performance', 'First Class Support', 'Shopify 2.0'].map((s, i) => (
+          {['1 Year Free Update', 'High Speed Performance', '1 Year Free Support', 'Shopify 2.0'].map((s, i) => (
             <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: 18 }}>
               {i > 0 && <span className="dot" />}
               {s}
@@ -266,7 +271,7 @@ function AnniversaryOffer() {
               <span className="ann-price-tag">✅ No hidden charges</span>
             </div>
           </div>
-          <p className="ann-sub">One-time payment · Lifetime updates included</p>
+          <p className="ann-sub">One-time payment · 1 Year Free Support & Updates</p>
 
           {/* Rotating urgency strip */}
           <div className="ann-strip">
@@ -571,10 +576,13 @@ function FinalCTA() {
       <div className="wrap" style={{ position: 'relative', textAlign: 'center' }}>
         <div className="cta-badge">⚡ Get started in minutes</div>
         <h2 className="cta-title">Ship the storefront<br />your brand deserves.</h2>
-        <p className="cta-sub">One purchase. Every demo. Forever updates. Built for Shopify 2.0.</p>
+        <p className="cta-sub">One purchase. 1 Year Free Support & Updates. Built for Shopify 2.0.</p>
         <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
           <a href="https://superprofile.bio/vp/shopify-415" target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-lg">Buy ThemePro V2 — ₹2499 →</a>
           <a href="https://themeprov2.myshopify.com/password" target="_blank" rel="noopener noreferrer" className="btn btn-ghost-light btn-lg">See live demos &nbsp;<span style={{ color: '#ff3333', fontWeight: 700 }}>Shopify store password: "V2"</span></a>
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20 }}>
+          <WhatsAppShareButton style={{ background: 'rgba(37,211,102,0.18)', color: '#25D366', border: '1px solid rgba(37,211,102,0.4)', boxShadow: 'none' }} />
         </div>
       </div>
     </section>
@@ -901,6 +909,44 @@ function RiskReversal() {
   );
 }
 
+/* ─────────────────── WhatsApp Share ─────────────────── */
+const WA_SHARE_URL = 'https://theme-api.createmshop.in/shopify-high-converting-professional-theme';
+const WA_SHARE_TEXT = encodeURIComponent('🚀 Check out ThemePro V2 — The fastest Shopify 2.0 theme with 99/100 PageSpeed! Built-in upsells, timers & trust badges. One-time ₹2499, 1 year free support & updates. 100+ stores trust it.\n\n');
+
+function WhatsAppShareButton({ style = {} }) {
+  const href = `https://wa.me/?text=${WA_SHARE_TEXT}${encodeURIComponent(WA_SHARE_URL)}`;
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: 8,
+        padding: '10px 20px',
+        background: '#25D366',
+        color: '#fff',
+        borderRadius: 99,
+        fontWeight: 700,
+        fontSize: 14,
+        textDecoration: 'none',
+        boxShadow: '0 4px 14px rgba(37,211,102,0.35)',
+        transition: 'opacity 0.15s',
+        ...style,
+      }}
+      onMouseEnter={e => e.currentTarget.style.opacity = '0.88'}
+      onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+    >
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+        <path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.122 1.532 5.848L.072 23.928l6.244-1.437A11.947 11.947 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.007-1.374l-.36-.213-3.706.853.883-3.606-.234-.371A9.818 9.818 0 0112 2.182c5.42 0 9.818 4.398 9.818 9.818 0 5.421-4.398 9.818-9.818 9.818z"/>
+      </svg>
+      Share on WhatsApp
+    </a>
+  );
+}
+
 /* ─────────────────── Page ─────────────────── */
 export default function ThemePage() {
   const [currency, setCurrency] = useState('INR');
@@ -927,37 +973,41 @@ export default function ThemePage() {
     <CurrencyContext.Provider value={{ currency, setCurrency, formatPrice }}>
       <Head>
         {/* ── Primary SEO ── */}
-        <title>ThemePro V2 — Best Shopify Theme for Dropshipping, Fashion & E-commerce</title>
-        <meta name="description" content="ThemePro V2 is the fastest Shopify 2.0 theme for dropshipping, fashion, jewellery & food businesses. One-time payment ₹2499, lifetime updates, 30-day refund. 100+ stores trust it." />
-        <meta name="keywords" content="shopify theme, best shopify theme, shopify 2.0 theme, dropshipping theme, fashion shopify theme, fast shopify theme, themepro v2" />
+        <title>ThemePro V2 — #1 High-Converting Shopify Theme | 99/100 PageSpeed | 1 Year Free Support & Updates</title>
+        <meta name="description" content="ThemePro V2: The fastest high-converting Shopify 2.0 theme. 99/100 PageSpeed, built-in upsells, countdown timers & trust badges — no apps needed. One-time payment ₹2499 · 1 Year Free Support & Updates · 30-day refund. 100+ stores trust it." />
+        <meta name="keywords" content="shopify theme, best shopify theme, shopify 2.0 theme, high converting shopify theme, dropshipping theme, fashion shopify theme, fast shopify theme, themepro v2, shopify theme india" />
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="canonical" href="https://themeprov2.com/shopify-high-converting-professional-theme" />
+        <link rel="canonical" href="https://theme-api.createmshop.in/shopify-high-converting-professional-theme" />
 
-        {/* ── Open Graph ── */}
+        {/* ── Open Graph (WhatsApp, Facebook, LinkedIn) ── */}
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="ThemePro V2" />
-        <meta property="og:title" content="ThemePro V2 — Best Shopify Theme for Dropshipping & E-commerce" />
-        <meta property="og:description" content="The fastest Shopify 2.0 theme on the market. One-time payment ₹2499. Lifetime updates. 100+ stores running ThemePro V2." />
-        <meta property="og:url" content="https://themeprov2.com/shopify-high-converting-professional-theme" />
-        <meta property="og:image" content="https://themeprov2.com/og-image.png" />
+        <meta property="og:title" content="ThemePro V2 — #1 High-Converting Shopify Theme | 99/100 PageSpeed" />
+        <meta property="og:description" content="The fastest Shopify 2.0 theme on the market. Built-in upsells, timers & trust badges. One-time payment ₹2499 · 1 Year Free Support & Updates · 30-day refund. 100+ stores running ThemePro V2." />
+        <meta property="og:url" content="https://theme-api.createmshop.in/shopify-high-converting-professional-theme" />
+        <meta property="og:image" content="https://theme-api.createmshop.in/og-cover.png" />
+        <meta property="og:image:secure_url" content="https://theme-api.createmshop.in/og-cover.png" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
+        <meta property="og:image:type" content="image/png" />
+        <meta property="og:image:alt" content="ThemePro V2 — High-Converting Shopify Theme with 99/100 PageSpeed" />
         <meta property="og:locale" content="en_IN" />
 
         {/* ── Twitter Card ── */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="ThemePro V2 — Best Shopify Theme for E-commerce" />
-        <meta name="twitter:description" content="The fastest Shopify 2.0 theme. One-time payment ₹2499. 100+ stores. Lifetime updates." />
-        <meta name="twitter:image" content="https://themeprov2.com/og-image.png" />
+        <meta name="twitter:title" content="ThemePro V2 — #1 High-Converting Shopify Theme" />
+        <meta name="twitter:description" content="The fastest Shopify 2.0 theme. 99/100 PageSpeed. Built-in upsells & timers. One-time ₹2499. 1 Year Free Support & Updates. 100+ stores." />
+        <meta name="twitter:image" content="https://theme-api.createmshop.in/og-cover.png" />
+        <meta name="twitter:image:alt" content="ThemePro V2 — High-Converting Shopify Theme" />
 
         {/* ── Structured Data: Product ── */}
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "Product",
           "name": "ThemePro V2 Shopify Theme",
-          "description": "The fastest Shopify 2.0 theme for dropshipping, fashion, jewellery and e-commerce. One-time payment, lifetime updates.",
-          "image": "https://themeprov2.com/og-image.png",
+          "description": "The fastest Shopify 2.0 theme for dropshipping, fashion, jewellery and e-commerce. One-time payment, 1 year free support & updates.",
+          "image": "https://theme-api.createmshop.in/og-cover.png",
           "brand": { "@type": "Brand", "name": "ThemePro V2" },
           "offers": {
             "@type": "Offer",
@@ -992,8 +1042,8 @@ export default function ThemePage() {
           "@context": "https://schema.org",
           "@type": "Organization",
           "name": "ThemePro V2",
-          "url": "https://themeprov2.com",
-          "logo": "https://themeprov2.com/logo.png",
+          "url": "https://theme-api.createmshop.in",
+          "logo": "https://theme-api.createmshop.in/logo.png",
           "sameAs": []
         })}} />
 
