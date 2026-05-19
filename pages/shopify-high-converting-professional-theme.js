@@ -197,10 +197,10 @@ function AnniversaryOffer() {
     '🔥 Flash Sale — Only a few spots left!',
     '⚡ 247 people viewing this right now',
     '🚨 Price goes up when timer hits zero!',
-    `💸 Save ${formatPrice('24,201', '250')} today only!`,
+    `💸 Save ${formatPrice('24,201', '250')}!`,
     '⏳ Anniversary offer — grab it before it\'s gone',
     '🏆 #1 Rated Shopify theme',
-    '🎯 Offer valid for today only!',
+    '🎯 Limited time offer!',
   ];
 
   const [msgIdx,  setMsgIdx]  = useState(0);
@@ -267,7 +267,6 @@ function AnniversaryOffer() {
             <div className="ann-saved-badge">🎉 You save {formatPrice('24,201', '250')} today!</div>
             <div className="ann-price-meta">
               <span className="ann-price-tag">⏱ Limited time</span>
-              <span className="ann-price-tag">📅 Today only</span>
               <span className="ann-price-tag">✅ No hidden charges</span>
             </div>
           </div>
@@ -732,7 +731,7 @@ function MobileStickyBar() {
     { icon: '⚡', text: '247 people viewing this right now' },
     { icon: '🚨', text: 'Price goes up when timer hits zero!' },
     { icon: '✅', text: '100+ stores already use this theme' },
-    { icon: '💸', text: `Save ${formatPrice('24,201', '250')} today only!` },
+    { icon: '💸', text: `Save ${formatPrice('24,201', '250')}!` },
     { icon: '⏳', text: 'Anniversary offer — grab it before it\'s gone' },
     { icon: '🏆', text: '#1 Rated Shopify theme' },
   ];
@@ -791,7 +790,7 @@ function MobileStickyBar() {
             <span className="msb-mrp">{formatPrice('26,700', '299')}</span>
             <span className="msb-badge">91% OFF</span>
           </div>
-          <div className="msb-sublabel">Limited time · Today only</div>
+          <div className="msb-sublabel">Limited time</div>
         </div>
 
         {/* CTA */}
