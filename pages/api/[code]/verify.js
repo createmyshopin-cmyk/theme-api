@@ -19,11 +19,25 @@ export default async function handler(req, res) {
     [license_code]
   )
 
-  if (rows.length === 0) return res.json({ valid: false })
+  if (rows.length === 0) return res.json({ valid: false, error: 'License not found' })
 
   const license = rows[0]
-  const expired = license.expires_at && new Date(license.expires_at) < new Date()
-  const valid = license.is_active === 1 && license.shop_domain === shop_domain && !expired
+  const expired = license.expires_at ? new Date(license.expires_at) < new Date() : false
 
-  return res.json({ valid, is_active: license.is_active, expired: expired || false })
+  // Strict store-lock: license must be active, bound to this exact store, and not expired
+  const storeMismatch = !license.shop_domain || license.shop_domain !== shop_domain
+  const valid = license.is_active === 1 && !storeMismatch && !expired
+
+  if (valid) {
+    // Update last_seen silently
+    query('UPDATE licenses SET last_seen = NOW() WHERE id = ?', [license.id]).catch(() => {})
+  }
+
+  if (!valid) {
+    if (expired)         return res.json({ valid: false, expired: true })
+    if (storeMismatch)   return res.json({ valid: false, error: 'License is not activated for this store' })
+    if (!license.is_active) return res.json({ valid: false, error: 'License is not active' })
+  }
+
+  return res.json({ valid: true, expired: false })
 }
