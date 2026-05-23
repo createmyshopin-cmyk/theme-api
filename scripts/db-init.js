@@ -34,6 +34,7 @@ async function init() {
   await conn.execute(`ALTER TABLE licenses ADD COLUMN IF NOT EXISTS store_name  VARCHAR(255) DEFAULT NULL AFTER shop_domain`).catch(() => {})
   await conn.execute(`ALTER TABLE licenses ADD COLUMN IF NOT EXISTS theme_name  VARCHAR(255) DEFAULT NULL`).catch(() => {})
   await conn.execute(`ALTER TABLE licenses ADD COLUMN IF NOT EXISTS last_seen   DATETIME     DEFAULT NULL`).catch(() => {})
+  await conn.execute(`ALTER TABLE licenses ADD COLUMN IF NOT EXISTS validity    ENUM('1year','unlimited') NOT NULL DEFAULT '1year'`).catch(() => {})
   console.log('Table `licenses` ready')
 
   await conn.execute(`

@@ -49,8 +49,10 @@ export default async function handler(req, res) {
   const ip = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || null
   const storeName = await fetchStoreName(shop_domain)
 
+  const isUnlimited = license.validity === 'unlimited'
   await query(
-    'UPDATE licenses SET is_active = 1, shop_domain = ?, store_name = ?, activated_at = NOW(), expires_at = DATE_ADD(NOW(), INTERVAL 1 YEAR), theme_name = ? WHERE id = ?',
+    `UPDATE licenses SET is_active = 1, shop_domain = ?, store_name = ?, activated_at = NOW(),
+     expires_at = ${isUnlimited ? 'NULL' : 'DATE_ADD(NOW(), INTERVAL 1 YEAR)'}, theme_name = ? WHERE id = ?`,
     [shop_domain, storeName, theme_name || license.theme_name, license.id]
   )
 

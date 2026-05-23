@@ -8,7 +8,7 @@ export default async function handler(req, res) {
     let rows
     try {
       rows = await query(
-        'SELECT id, phone, license_code, shop_domain, store_name, is_active, activated_at, expires_at, created_at, notes, theme_name, last_seen FROM licenses ORDER BY created_at DESC',
+        'SELECT id, phone, license_code, shop_domain, store_name, is_active, activated_at, expires_at, created_at, notes, theme_name, last_seen, validity FROM licenses ORDER BY created_at DESC',
         []
       )
     } catch {

@@ -25,6 +25,7 @@ export default function Dashboard() {
   const [genCC, setGenCC]           = useState('IN')
   const [genDropOpen, setGenDropOpen] = useState(false)
   const [genCCSearch, setGenCCSearch] = useState('')
+  const [genValidity, setGenValidity] = useState('1year')
 
   const COUNTRIES = [
     ['IN','+91','India'],['US','+1','United States'],['GB','+44','United Kingdom'],
@@ -271,7 +272,7 @@ export default function Dashboard() {
       const res = await fetch('/api/admin/generate', {
         method: 'POST',
         headers: authHeaders(),
-        body: JSON.stringify({ phone: fullPhone, notes: genNotes }),
+        body: JSON.stringify({ phone: fullPhone, notes: genNotes, validity: genValidity }),
       })
       const data = await res.json()
       if (!res.ok) {
@@ -279,7 +280,7 @@ export default function Dashboard() {
         if (data.license) setGenResult({ existing: true, ...data.license })
       } else {
         setGenResult(data)
-        setGenPhone(''); setGenNotes('')
+        setGenPhone(''); setGenNotes(''); setGenValidity('1year')
         fetchLicenses()
         showToast(`License ${data.license_code} created`)
       }
@@ -340,7 +341,12 @@ export default function Dashboard() {
     if (!expiresAt) return null
     return Math.ceil((new Date(expiresAt) - Date.now()) / (1000 * 60 * 60 * 24))
   }
-  function ExpiryBadge({ expiresAt }) {
+  function ExpiryBadge({ expiresAt, validity }) {
+    if (validity === 'unlimited') return (
+      <span style={{ fontSize:11, fontWeight:800, background:'#f0fdf4', color:'#16a34a', border:'1px solid #bbf7d0', borderRadius:100, padding:'3px 10px', display:'inline-block' }}>
+        ♾ Unlimited
+      </span>
+    )
     if (!expiresAt) return <span style={s.muted}>—</span>
     const days = daysLeft(expiresAt)
     const expired = days <= 0
@@ -676,7 +682,7 @@ export default function Dashboard() {
                                 </span>
                               </td>
                               <td style={s.td}>
-                                <ExpiryBadge expiresAt={lic.expires_at} />
+                                <ExpiryBadge expiresAt={lic.expires_at} validity={lic.validity} />
                               </td>
                               <td style={s.td}>
                                 {lic.last_seen ? (
@@ -1014,11 +1020,35 @@ export default function Dashboard() {
                     </div>
 
                     {/* Notes */}
-                    <div style={{...s.field, marginBottom:20}}>
+                    <div style={{...s.field, marginBottom:16}}>
                       <label style={s.label}>Theme Name / Notes</label>
                       <input style={{...s.input, borderRadius:14}}
                         type="text" placeholder="e.g. Triara Express — Order #1234"
                         value={genNotes} onChange={e => setGenNotes(e.target.value)} />
+                    </div>
+
+                    {/* Validity */}
+                    <div style={{...s.field, marginBottom:20}}>
+                      <label style={s.label}>Validity</label>
+                      <div style={{display:'flex', gap:10}}>
+                        {[['1year','1 Year'], ['unlimited','Unlimited ♾']].map(([val, label]) => (
+                          <button
+                            key={val}
+                            type="button"
+                            onClick={() => setGenValidity(val)}
+                            style={{
+                              flex:1, padding:'11px 14px', border:'1.5px solid',
+                              borderRadius:12, fontSize:13, fontWeight:700, cursor:'pointer',
+                              transition:'all 0.15s',
+                              borderColor: genValidity === val ? (val === 'unlimited' ? '#16a34a' : '#6366f1') : '#e2e8f0',
+                              background: genValidity === val ? (val === 'unlimited' ? '#f0fdf4' : '#eef2ff') : '#f8fafc',
+                              color: genValidity === val ? (val === 'unlimited' ? '#15803d' : '#4f46e5') : '#64748b',
+                            }}
+                          >
+                            {label}
+                          </button>
+                        ))}
+                      </div>
                     </div>
 
                     {genError && (
@@ -1180,7 +1210,7 @@ export default function Dashboard() {
                                 </span>
                               </td>
                               <td style={s.td}>
-                                <ExpiryBadge expiresAt={lic.expires_at} />
+                                <ExpiryBadge expiresAt={lic.expires_at} validity={lic.validity} />
                               </td>
                               <td style={s.td}>
                                 {lic.last_seen ? (

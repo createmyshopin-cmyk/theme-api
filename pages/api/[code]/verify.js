@@ -15,14 +15,15 @@ export default async function handler(req, res) {
   }
 
   const rows = await query(
-    'SELECT id, is_active, shop_domain, expires_at FROM licenses WHERE license_code = ?',
+    'SELECT id, is_active, shop_domain, expires_at, validity FROM licenses WHERE license_code = ?',
     [license_code]
   )
 
   if (rows.length === 0) return res.json({ valid: false, error: 'License not found' })
 
   const license = rows[0]
-  const expired = license.expires_at ? new Date(license.expires_at) < new Date() : false
+  const isUnlimited = license.validity === 'unlimited'
+  const expired = isUnlimited ? false : (license.expires_at ? new Date(license.expires_at) < new Date() : false)
 
   // Strict store-lock: license must be active, bound to this exact store, and not expired
   const storeMismatch = !license.shop_domain || license.shop_domain !== shop_domain
